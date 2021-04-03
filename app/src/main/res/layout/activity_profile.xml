@@ -169,20 +169,20 @@
     <ImageView
         android:id="@+id/imagehome_profile"
         android:layout_width="64dp"
-        android:layout_height="25dp"
+        android:layout_height="26dp"
         android:background="@drawable/ripple"
         app:layout_constraintBottom_toBottomOf="@+id/imageupload_profile"
         app:layout_constraintEnd_toStartOf="@+id/imageupload_profile"
-        app:layout_constraintHorizontal_bias="0.205"
+        app:layout_constraintHorizontal_bias="0.256"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageupload_profile"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/home" />
+        app:srcCompat="@drawable/home1" />
 
     <ImageView
         android:id="@+id/imageprofile_profile"
         android:layout_width="64dp"
-        android:layout_height="25dp"
+        android:layout_height="27dp"
         android:background="@drawable/ripple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -190,12 +190,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/vector_4_profile"
         app:layout_constraintVertical_bias="0.378"
-        app:srcCompat="@drawable/profile2" />
+        app:srcCompat="@drawable/profile3" />
 
     <ImageView
         android:id="@+id/imageupload_profile"
         android:layout_width="64dp"
-        android:layout_height="25dp"
+        android:layout_height="27dp"
         android:background="@drawable/ripple"
         app:layout_constraintBottom_toBottomOf="@+id/imageprofile"
         app:layout_constraintEnd_toStartOf="@+id/imageprofile_profile"
@@ -203,7 +203,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageprofile_profile"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/upload" />
+        app:srcCompat="@drawable/upload1" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/postprofile"

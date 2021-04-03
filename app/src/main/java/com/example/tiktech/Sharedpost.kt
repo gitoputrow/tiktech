@@ -83,14 +83,14 @@ class Sharedpost : AppCompatActivity() {
             var hashMapisi = HashMap<String, Any>()
             hashMapisi.put("text",text)
             hashMapisi.put("foto",foto.toString())
-            database.child("data${ambil.getStringExtra("username")}").child("activty").addListenerForSingleValueEvent(object :
+            database.child("data${ambil.getStringExtra("username")}").child("activity").addListenerForSingleValueEvent(object :
                     ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.hasChild("post")){
-                        database.child("data${ambil.getStringExtra("username")}").child("activty")
+                        database.child("data${ambil.getStringExtra("username")}").child("activity")
                                 .child("post")
                                 .child("postingan${snapshot.child("post").childrenCount + 1}")
                                 .setValue(hashMapisi)
@@ -119,7 +119,7 @@ class Sharedpost : AppCompatActivity() {
                         }
                     }
                     else{
-                        database.child("data${ambil.getStringExtra("username")}").child("activty")
+                        database.child("data${ambil.getStringExtra("username")}").child("activity")
                                 .child("post")
                                 .child("postingan1")
                                 .setValue(hashMapisi)

@@ -12,13 +12,16 @@ import com.google.android.material.imageview.ShapeableImageView
 import coil.load
 
 
-class feedadapter(private val item : List<feeditem>) : RecyclerView.Adapter<feedadapter.ViewHolder>(){
+class feedadapter(private val item : List<feeditem>, var clicklistener : clicklistener) : RecyclerView.Adapter<feedadapter.ViewHolder>(){
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        fun insert(item: feeditem, id: Int) {
+        fun insert(item: feeditem, id: Int, action: clicklistener) {
             view.findViewById<ImageView>(R.id.feed_photo).load(item.photo)
             view.findViewById<TextView>(R.id.feed_name).text = item.name
             view.findViewById<MaterialTextView>(R.id.feed_user).text = item.username
             view.findViewById<MaterialTextView>(R.id.feed_caption).text = item.content
+            itemView.setOnClickListener {
+                action.onitemclick(item,adapterPosition)
+            }
         }
     }
 
@@ -30,7 +33,7 @@ class feedadapter(private val item : List<feeditem>) : RecyclerView.Adapter<feed
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.insert(item.get(position), position + 1)
+        holder.insert(item.get(position), position + 1,clicklistener)
     }
 
 }

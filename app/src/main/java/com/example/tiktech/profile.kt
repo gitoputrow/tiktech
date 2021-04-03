@@ -14,6 +14,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +34,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
 
-class profile : AppCompatActivity() {
+class profile : AppCompatActivity() , clicklistener{
     val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
     val database: DatabaseReference = FirebaseDatabase.getInstance().getReference()
     private var layoutManager: RecyclerView.LayoutManager? = null
@@ -62,7 +63,7 @@ class profile : AppCompatActivity() {
                     })
                 }
                 if (snapshot.child("activty").hasChild("post")){
-                    findViewById<TextView>(R.id.angkapost).setText(snapshot.child("activty").child("post").childrenCount.toString())
+                    findViewById<TextView>(R.id.angkapost).setText(snapshot.child("activity").child("post").childrenCount.toString())
                 }
             }
 
@@ -115,6 +116,15 @@ class profile : AppCompatActivity() {
         }
         recyclerViewInflater(ambil)
     }
+
+    override fun onitemclick(item: feeditem, position: Int) {
+        val pindah = Intent(this,readmore::class.java)
+        pindah.putExtra("usernamepost",item.username)
+        pindah.putExtra("username",x)
+        pindah.putExtra("postid",item.postid)
+        pindah.putExtra("foto", item.photo)
+        startActivity(pindah)
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 0){
@@ -138,9 +148,9 @@ class profile : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.child("activty").hasChild("post")){
+                if (snapshot.child("activity").hasChild("post")){
                     var name = snapshot.child("name").value.toString()
-                    database.child("data${ambil.getStringExtra("username")}").child("activty").child("post")
+                    database.child("data${ambil.getStringExtra("username")}").child("activity").child("post")
                             .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onCancelled(error: DatabaseError) {}
                                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -171,10 +181,10 @@ class profile : AppCompatActivity() {
             storage.child("post${ambil.getStringExtra("username")}")
                     .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
                         override fun onSuccess(p0: Uri?) {
-                            list.add(feeditem(p0.toString(),name,ambil.getStringExtra("username"), text))
+                            list.add(feeditem(p0.toString(),name,ambil.getStringExtra("username"), childname,text))
                             findViewById<RecyclerView>(R.id.postprofile).setHasFixedSize(true)
                             findViewById<RecyclerView>(R.id.postprofile).layoutManager = LinearLayoutManager(this@profile)
-                            val adapter = feedadapter(list)
+                            val adapter = feedadapter(list,this@profile)
                             findViewById<RecyclerView>(R.id.postprofile).adapter = adapter
                         }
                     })
@@ -182,11 +192,11 @@ class profile : AppCompatActivity() {
         else{
             storage.child("default.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
                 override fun onSuccess(p0: Uri?) {
-                    Log.d(ContentValues.TAG,text);
-                    list.add(feeditem(p0.toString(),name,ambil.getStringExtra("username"), text))
+                    Log.d(ContentValues.TAG,text)
+                    list.add(feeditem(p0.toString(),name,ambil.getStringExtra("username"), childname,text))
                     findViewById<RecyclerView>(R.id.postprofile).setHasFixedSize(true)
                     findViewById<RecyclerView>(R.id.postprofile).layoutManager = LinearLayoutManager(this@profile)
-                    val adapter = feedadapter(list)
+                    val adapter = feedadapter(list,this@profile)
                     findViewById<RecyclerView>(R.id.postprofile).adapter = adapter
                 }
             })

@@ -110,10 +110,10 @@ class Register_Activity : AppCompatActivity() {
     }
     fun activty(database : DatabaseReference){
         var hashMaplike = HashMap<String, Any>()
-        hashMaplike.put("likes","0")
+        hashMaplike.put("like","0")
         hashMaplike.put("constribution","0")
         database.child("data${findViewById<EditText>(R.id.usernameinput).text}")
-                .child("activty")
+                .child("activity")
                 .setValue(hashMaplike)
     }
 }

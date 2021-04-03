@@ -68,7 +68,7 @@
     <ImageView
         android:id="@+id/imageprofile_notif"
         android:layout_width="64dp"
-        android:layout_height="25dp"
+        android:layout_height="27dp"
         android:background="@drawable/ripple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,12 +76,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/vector_4"
         app:layout_constraintVertical_bias="0.378"
-        app:srcCompat="@drawable/profile2" />
+        app:srcCompat="@drawable/profile3" />
 
     <ImageView
         android:id="@+id/imageupload_notif"
         android:layout_width="64dp"
-        android:layout_height="25dp"
+        android:layout_height="27dp"
         android:background="@drawable/ripple"
         app:layout_constraintBottom_toBottomOf="@+id/imageprofile_notif"
         app:layout_constraintEnd_toStartOf="@+id/imageprofile_notif"
@@ -89,20 +89,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageprofile_notif"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/upload" />
+        app:srcCompat="@drawable/upload1" />
 
     <ImageView
         android:id="@+id/imagehome_notif"
         android:layout_width="64dp"
-        android:layout_height="25dp"
+        android:layout_height="26dp"
         android:background="@drawable/ripple"
         app:layout_constraintBottom_toBottomOf="@+id/imageupload_notif"
         app:layout_constraintEnd_toStartOf="@+id/imageupload_notif"
-        app:layout_constraintHorizontal_bias="0.205"
+        app:layout_constraintHorizontal_bias="0.242"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageupload_notif"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/home" />
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/home1" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
