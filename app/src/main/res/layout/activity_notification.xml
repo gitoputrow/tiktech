@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".notification"
+    android:background="@color/white">
+    <TextView
+        android:id="@+id/notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:gravity="center_horizontal|top"
+        android:text="@string/notification"
+        android:textAppearance="@style/tik_tech"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/header_notif"
+        app:layout_constraintStart_toEndOf="@+id/backarrow_notif"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.34" />
+
+    <View
+        android:id="@+id/header_notif"
+        android:layout_width="match_parent"
+        android:layout_height="79dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/rectangle_1"
+        android:elevation="4dp"
+        android:translationZ="-90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/backarrow_notif"
+        android:layout_width="34dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/ripple"
+        app:layout_constraintBottom_toBottomOf="@+id/header_notif"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.370"
+        app:srcCompat="@drawable/backarrow" />
+
+    <View
+        android:id="@+id/vector_4"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="56dp"
+        android:background="@drawable/vector_4"
+        android:elevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageprofile_notif"
+        android:layout_width="64dp"
+        android:layout_height="25dp"
+        android:background="@drawable/ripple"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.927"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vector_4"
+        app:layout_constraintVertical_bias="0.378"
+        app:srcCompat="@drawable/profile2" />
+
+    <ImageView
+        android:id="@+id/imageupload_notif"
+        android:layout_width="64dp"
+        android:layout_height="25dp"
+        android:background="@drawable/ripple"
+        app:layout_constraintBottom_toBottomOf="@+id/imageprofile_notif"
+        app:layout_constraintEnd_toStartOf="@+id/imageprofile_notif"
+        app:layout_constraintHorizontal_bias="0.664"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageprofile_notif"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/upload" />
+
+    <ImageView
+        android:id="@+id/imagehome_notif"
+        android:layout_width="64dp"
+        android:layout_height="25dp"
+        android:background="@drawable/ripple"
+        app:layout_constraintBottom_toBottomOf="@+id/imageupload_notif"
+        app:layout_constraintEnd_toStartOf="@+id/imageupload_notif"
+        app:layout_constraintHorizontal_bias="0.205"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageupload_notif"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/home" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="570dp"
+        app:layout_constraintBottom_toTopOf="@+id/vector_4"
+        app:layout_constraintTop_toBottomOf="@+id/header_notif"
+        app:layout_constraintVertical_bias="0.265"
+        tools:layout_editor_absoluteX="0dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

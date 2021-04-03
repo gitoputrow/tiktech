@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "658816573991",
+    "project_id": "tiktech-cb01d",
+    "storage_bucket": "tiktech-cb01d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658816573991:android:4de6d4c64670c894af6402",
+        "android_client_info": {
+          "package_name": "com.example.tiktech"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "658816573991-g8j3ldv90qae4hebju5lo6sg15mbgate.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTZzoVdwhKdbEfXPXEUIg6a92HL2i6nAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "658816573991-g8j3ldv90qae4hebju5lo6sg15mbgate.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

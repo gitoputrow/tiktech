@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">TIKTECH</string>
+    <string name="tik_tech">
+        Tik - Tech
+    </string>
+    <string name="share_post">
+        Share Post
+    </string>
+    <string name="notification">
+        Notification
+    </string>
+
+
+</resources>

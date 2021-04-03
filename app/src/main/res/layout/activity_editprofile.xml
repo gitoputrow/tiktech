@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".Editprofile">
+
+    <View
+        android:id="@+id/header_ep"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/atas_setting"
+        android:elevation="4dp"
+        android:translationZ="-90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/judul_ep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="116dp"
+        android:layout_marginRight="116dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Edit Profile"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="@+id/header_ep"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.243"
+        app:layout_constraintStart_toEndOf="@+id/backarrow_ep"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.278" />
+
+    <ImageView
+        android:id="@+id/backarrow_ep"
+        android:layout_width="24dp"
+        android:layout_height="31dp"
+        android:background="@drawable/ripple"
+        app:layout_constraintBottom_toBottomOf="@+id/header_ep"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.106"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/header_ep"
+        app:layout_constraintVertical_bias="0.300"
+        app:srcCompat="@drawable/backarrow_white" />
+
+    <TextView
+        android:id="@+id/judul_cp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Change Profile"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_ep"
+        app:layout_constraintVertical_bias="0.035" />
+
+    <TextView
+        android:id="@+id/judul_cp_pass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Change Password"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.126"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header_ep"
+        app:layout_constraintVertical_bias="0.362" />
+
+    <TextView
+        android:id="@+id/judul_cpName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Name"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/judul_cp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/judul_cp"
+        app:layout_constraintTop_toBottomOf="@+id/judul_cp"
+        app:layout_constraintVertical_bias="0.017" />
+
+    <TextView
+        android:id="@+id/judul_cppass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Current Password"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/judul_cp_pass"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/judul_cp_pass"
+        app:layout_constraintTop_toBottomOf="@+id/judul_cp_pass"
+        app:layout_constraintVertical_bias="0.027" />
+
+    <TextView
+        android:id="@+id/judul_cpnpass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="New Password"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/cpass_cp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/cpass_cp"
+        app:layout_constraintTop_toBottomOf="@+id/cpass_cp"
+        app:layout_constraintVertical_bias="0.053" />
+
+    <TextView
+        android:id="@+id/judul_cpcnpass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Confirm New Password"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/npass_cp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/npass_cp"
+        app:layout_constraintTop_toBottomOf="@+id/npass_cp"
+        app:layout_constraintVertical_bias="0.081" />
+
+    <EditText
+        android:id="@+id/name_cp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cp_background"
+        android:ems="10"
+        android:hint="Name"
+        android:textColor="@color/black"
+        android:inputType="textPersonName"
+        android:paddingLeft="0dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/judul_cpName"
+        app:layout_constraintTop_toBottomOf="@+id/judul_cpName"
+        app:layout_constraintVertical_bias="0.045" />
+
+    <EditText
+        android:id="@+id/cpass_cp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cp_background"
+        android:ems="10"
+        android:hint="Current Password"
+        android:textColor="@color/black"
+        android:inputType="textPassword"
+        android:paddingLeft="0dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/judul_cppass"
+        app:layout_constraintTop_toBottomOf="@+id/judul_cppass"
+        app:layout_constraintVertical_bias="0.065" />
+
+    <EditText
+        android:id="@+id/npass_cp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cp_background"
+        android:ems="10"
+        android:hint="New Password"
+        android:textColor="@color/black"
+        android:inputType="textPassword"
+        android:paddingLeft="0dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/judul_cpnpass"
+        app:layout_constraintTop_toBottomOf="@+id/judul_cpnpass"
+        app:layout_constraintVertical_bias="0.087" />
+
+    <EditText
+        android:id="@+id/cnpass_cp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/cp_background"
+        android:ems="10"
+        android:hint="Confirm New Password"
+        android:textColor="@color/black"
+        android:inputType="textPassword"
+        android:paddingLeft="0dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/judul_cpcnpass"
+        app:layout_constraintTop_toBottomOf="@+id/judul_cpcnpass"
+        app:layout_constraintVertical_bias="0.114" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:text="Save"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        app:backgroundTint="#6C63FF"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cnpass_cp"
+        app:layout_constraintVertical_bias="0.772"
+        app:rippleColor="#FFFFFF" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

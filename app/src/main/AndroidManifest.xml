@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.tiktech">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.TIKTECH">
+        <activity android:name=".feedlayout"></activity>
+        <activity android:name=".setting_menu" />
+        <activity android:name=".notification" />
+        <activity android:name=".Editprofile" />
+        <activity android:name=".Sharedpost" />
+        <activity android:name=".profile" />
+        <activity android:name=".Home" />
+        <activity android:name=".Register_Activity" />
+        <activity android:name=".Login_activty" />
+        <activity android:name=".homescreen_Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
