@@ -48,7 +48,7 @@ class profile : AppCompatActivity() , clicklistener{
         x = ambil.getStringExtra("username").toString()
         findViewById<TextView>(R.id.usernameprofile).setText(ambil.getStringExtra("username"))
 
-        database.child("data${ambil.getStringExtra("username")}").addListenerForSingleValueEvent(object : ValueEventListener{
+        database.child("data${ambil.getStringExtra("username")}").addValueEventListener(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -62,8 +62,26 @@ class profile : AppCompatActivity() , clicklistener{
                         }
                     })
                 }
-                if (snapshot.child("activty").hasChild("post")){
+                if (snapshot.child("activity").hasChild("post")){
                     findViewById<TextView>(R.id.angkapost).setText(snapshot.child("activity").child("post").childrenCount.toString())
+                    database.child("data${ambil.getStringExtra("username")}").child("activity").child("post")
+                            .addValueEventListener(object : ValueEventListener{
+                                var total = 0
+                                override fun onCancelled(error: DatabaseError) {
+                                    TODO("Not yet implemented")
+                                }
+
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    for (child in snapshot.children){
+                                        var childname = child.key.toString()
+                                        if (snapshot.child(childname).hasChild("likes")){
+                                            total = (total + snapshot.child(childname).child("likes").childrenCount).toInt()
+                                        }
+                                    }
+                                    findViewById<TextView>(R.id.angkalikes).setText(total.toString())
+                                }
+
+                            })
                 }
             }
 
@@ -123,6 +141,7 @@ class profile : AppCompatActivity() , clicklistener{
         pindah.putExtra("username",x)
         pindah.putExtra("postid",item.postid)
         pindah.putExtra("foto", item.photo)
+        finish()
         startActivity(pindah)
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

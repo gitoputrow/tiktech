@@ -126,6 +126,7 @@ class Home : AppCompatActivity() , clicklistener{
         pindah.putExtra("username",username)
         pindah.putExtra("postid",item.postid)
         pindah.putExtra("foto", item.photo)
+        finish()
         startActivity(pindah)
     }
 }
