@@ -25,41 +25,39 @@ class readmore : AppCompatActivity() {
         val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
         findViewById<ImageView>(R.id.foto_readmore).load(ambil.getStringExtra("foto"))
         Log.d(ContentValues.TAG,ambil.getStringExtra("username").toString())
-        database.child("data${ambil.getStringExtra("usernamepost")}").addValueEventListener(object : ValueEventListener{
+        database.child("data${ambil.getStringExtra("usernamepost")}").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
             override fun onDataChange(snapshot: DataSnapshot) {
                 findViewById<TextView>(R.id.usernameprofile_readmore).setText(snapshot.child("user").value.toString())
                 findViewById<TextView>(R.id.namaprofile_readmore).setText(snapshot.child("name").value.toString())
-                if (snapshot.child("profile").value.toString().equals("true")){
+                if (snapshot.child("profile").value.toString().equals("true")) {
                     storage.child("profile${ambil.getStringExtra("usernamepost")}").downloadUrl.addOnSuccessListener(object :
-                        OnSuccessListener<Uri> {
+                            OnSuccessListener<Uri> {
                         override fun onSuccess(p0: Uri?) {
                             Glide.with(this@readmore).load(p0).into(findViewById(R.id.fotoprofile_readmore))
                         }
                     })
                 }
-                database.child("data${ambil.getStringExtra("usernamepost")}").child("activity").child("post")
-                    .child(ambil.getStringExtra("postid").toString()).addValueEventListener(object : ValueEventListener{
-                        override fun onCancelled(error: DatabaseError) {
-                            TODO("Not yet implemented")
-                        }
-
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            findViewById<TextView>(R.id.teks_readmore).setText(snapshot.child("text").value.toString())
-                            if (snapshot.hasChild("likes")){
-                                findViewById<TextView>(R.id.number_like).setText(snapshot.child("likes").childrenCount.toString())
-                            }
-                            else{
-                                findViewById<TextView>(R.id.number_like).setText("0")
-                            }
-                        }
-
-                    })
             }
         })
-        database.child("data${ambil.getStringExtra("username")}").child("activity").addListenerForSingleValueEvent(object :
+        database.child("data${ambil.getStringExtra("usernamepost")}").child("activity").child("post")
+                .child(ambil.getStringExtra("postid").toString()).addValueEventListener(object : ValueEventListener{
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        findViewById<TextView>(R.id.teks_readmore).setText(snapshot.child("text").value.toString())
+                        if (snapshot.hasChild("likes")){
+                            findViewById<TextView>(R.id.number_like).setText(snapshot.child("likes").childrenCount.toString())
+                        }
+                        else{
+                            findViewById<TextView>(R.id.number_like).setText("0")
+                        }
+                    }
+        })
+        database.child("data${ambil.getStringExtra("username")}").child("activity").addValueEventListener(object :
         ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")

@@ -105,6 +105,7 @@
         app:srcCompat="@drawable/home1" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_notif"
         android:layout_width="match_parent"
         android:layout_height="570dp"
         app:layout_constraintBottom_toTopOf="@+id/vector_4"

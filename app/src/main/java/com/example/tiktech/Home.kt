@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
@@ -48,12 +50,21 @@ class Home : AppCompatActivity() , clicklistener{
             startActivity(pindah)
             finish()
         }
+        findViewById<SwipeRefreshLayout>(R.id.refresh).setOnRefreshListener {
+            findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = true
+            finish()
+            overridePendingTransition(0,0)
+            val pindah = Intent(this,Home::class.java)
+            pindah.putExtra("username",ambil.getStringExtra("username"))
+            startActivity(pindah)
+            overridePendingTransition(0,0)
+            findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = false
+        }
         recyclerViewInflater(ambil)
-
     }
 
     private fun recyclerViewInflater(ambil : Intent) {
-        database.orderByValue().addValueEventListener(object : ValueEventListener{
+        database.orderByKey().addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -61,18 +72,18 @@ class Home : AppCompatActivity() , clicklistener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (childmain in snapshot.children){
                     var childdata = childmain.key.toString()
-//                    Log.d(ContentValues.TAG,childdata.toString());
                     var username = snapshot.child(childdata).child("user").value.toString()
                     if (snapshot.child(childdata).child("activity").hasChild("post")){
                         var name = snapshot.child(childdata).child("name").value.toString()
-                        database.child(childdata).child("activity").child("post")
-                                .addValueEventListener(object : ValueEventListener {
+                        database.child(childdata).child("activity").child("post").orderByKey()
+                                .addListenerForSingleValueEvent(object : ValueEventListener {
                                     override fun onCancelled(error: DatabaseError) {}
                                     override fun onDataChange(snapshot: DataSnapshot) {
                                         var text = ""
                                         for (child in snapshot.children){
                                             var childname = child.key.toString()
-//                                            Log.d(ContentValues.TAG,childname.toString());
+                                            Log.d(ContentValues.TAG,childdata.toString());
+                                            Log.d(ContentValues.TAG,childname.toString());
                                             var childnametext = snapshot.child(childname).child("text").value.toString()
                                             var childnamefoto = snapshot.child(childname).child("foto").value.toString()
                                             if (childnametext.length > 20){
@@ -126,7 +137,7 @@ class Home : AppCompatActivity() , clicklistener{
         pindah.putExtra("username",username)
         pindah.putExtra("postid",item.postid)
         pindah.putExtra("foto", item.photo)
-        finish()
         startActivity(pindah)
+        finish()
     }
 }

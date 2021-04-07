@@ -150,23 +150,6 @@ class Sharedpost : AppCompatActivity() {
                 }
 
             })
-//            database.child("data${ambil.getStringExtra("username")}").child("activty")
-//                    .child("post")
-//                    .setValue(text)
-//                    .addOnSuccessListener {
-//                        if(ambil.getBooleanExtra("profile",false)){
-//                            val pindah = Intent(this,profile::class.java)
-//                            pindah.putExtra("username",ambil.getStringExtra("username"))
-//                            startActivity(pindah)
-//                            finish()
-//                        }
-//                        else{
-//                            val pindah = Intent(this,Home::class.java)
-//                            pindah.putExtra("username",ambil.getStringExtra("username"))
-//                            startActivity(pindah)
-//                            finish()
-//                        }
-//                    }
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -191,9 +174,15 @@ class Sharedpost : AppCompatActivity() {
             }
         }
         if (findViewById<AppCompatImageView>(R.id.imagesp).visibility == View.VISIBLE){
-            findViewById<TextView>(R.id.hintImage).visibility = View.VISIBLE
-            findViewById<EditText>(R.id.nulis_spImage).visibility = View.VISIBLE
+            if (findViewById<EditText>(R.id.nulis_sp).text.isNotEmpty()){
+                findViewById<EditText>(R.id.nulis_spImage).visibility = View.VISIBLE
+                findViewById<EditText>(R.id.nulis_spImage).text = findViewById<EditText>(R.id.nulis_sp).text
+            }
+            else {
+                findViewById<TextView>(R.id.hintImage).visibility = View.VISIBLE
+                findViewById<EditText>(R.id.nulis_spImage).visibility = View.VISIBLE
+            }
+            foto = true
         }
-        foto = true
     }
 }

@@ -102,20 +102,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageupload"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/home1" />
+        app:srcCompat="@drawable/home_hover" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="19dp"
-        android:layout_marginRight="19dp"
         android:layout_marginTop="70dp"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toTopOf="@+id/vector_4"
-        app:layout_constraintTop_toBottomOf="@+id/header_home"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="16dp" />
+        android:layout_marginBottom="60dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="19dp"
+            android:layout_marginRight="19dp"
+            app:layout_constraintBottom_toTopOf="@+id/vector_4"
+            app:layout_constraintTop_toBottomOf="@+id/header_home"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="16dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

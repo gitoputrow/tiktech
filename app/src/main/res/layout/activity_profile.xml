@@ -205,18 +205,21 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/upload1" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postprofile"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginBottom="60dp"
-        android:layout_marginTop="240dp"
-        app:layout_constraintBottom_toTopOf="@+id/vector_4_profile"
-        app:layout_constraintTop_toBottomOf="@+id/buttonep"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_marginTop="240dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/postprofile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toTopOf="@+id/vector_4_profile"
+            app:layout_constraintTop_toBottomOf="@+id/buttonep"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteX="0dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ImageView
         android:id="@+id/settingprofile"

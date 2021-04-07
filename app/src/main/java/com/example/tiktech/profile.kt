@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
@@ -133,6 +134,16 @@ class profile : AppCompatActivity() , clicklistener{
             builder.show()
         }
         recyclerViewInflater(ambil)
+        findViewById<SwipeRefreshLayout>(R.id.refresh_profile).setOnRefreshListener{
+            findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = true
+            finish()
+            overridePendingTransition(0,0)
+            val pindah = Intent(this,profile::class.java)
+            pindah.putExtra("username",ambil.getStringExtra("username"))
+            startActivity(pindah)
+            overridePendingTransition(0,0)
+            findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = false
+        }
     }
 
     override fun onitemclick(item: feeditem, position: Int) {
@@ -141,8 +152,8 @@ class profile : AppCompatActivity() , clicklistener{
         pindah.putExtra("username",x)
         pindah.putExtra("postid",item.postid)
         pindah.putExtra("foto", item.photo)
-        finish()
         startActivity(pindah)
+        finish()
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

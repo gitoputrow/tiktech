@@ -35,5 +35,4 @@ class feedadapter(private val item : List<feeditem>, var clicklistener : clickli
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.insert(item.get(position), position + 1,clicklistener)
     }
-
 }

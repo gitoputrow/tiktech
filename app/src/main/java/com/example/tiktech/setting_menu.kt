@@ -37,7 +37,7 @@ class setting_menu : AppCompatActivity() {
             finish()
         }
         findViewById<Button>(R.id.button_delete).setOnClickListener {
-            database.child("data${ambil.getStringExtra("username")}").child("activty").addListenerForSingleValueEvent(object :
+            database.child("data${ambil.getStringExtra("username")}").child("activity").addListenerForSingleValueEvent(object :
                     ValueEventListener{
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
@@ -57,6 +57,46 @@ class setting_menu : AppCompatActivity() {
             })
             database.child("data${ambil.getStringExtra("username")}").removeValue()
             storage.child("profile${ambil.getStringExtra("username")}").delete()
+            database.addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (child in snapshot.children){
+                        var childuser = child.key.toString()
+                        if (snapshot.child(childuser).child("activity").hasChild("liked")){
+                            if (snapshot.child(childuser).child("activity").child("liked")
+                                            .hasChild(ambil.getStringExtra("username").toString())){
+                                database.child(childuser).child("activity").child("liked")
+                                        .child(ambil.getStringExtra("username").toString()).removeValue()
+                            }
+                        }
+                        if (snapshot.child(childuser).child("activity").hasChild("post")){
+                            database.child(childuser).child("activity").child("post").addListenerForSingleValueEvent(object :
+                            ValueEventListener{
+                                override fun onCancelled(error: DatabaseError) {
+                                    TODO("Not yet implemented")
+                                }
+
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    for (childpost in snapshot.children){
+                                        var childpostname = childpost.key.toString()
+                                        if (snapshot.child(childpostname).hasChild("likes")){
+                                            if (snapshot.child(childpostname).child("likes").hasChild(ambil.getStringExtra("username").toString())){
+                                                database.child(childuser).child("activity").child("post").child(childpostname)
+                                                        .child("likes").child(ambil.getStringExtra("username").toString()).removeValue()
+                                            }
+                                        }
+                                    }
+                                }
+
+                            })
+                        }
+                    }
+                }
+
+            })
             val pindah = Intent(this,Login_activty::class.java)
             startActivity(pindah)
             finish()
