@@ -173,7 +173,7 @@
         android:background="@drawable/ripple"
         app:layout_constraintBottom_toBottomOf="@+id/imageupload_profile"
         app:layout_constraintEnd_toStartOf="@+id/imageupload_profile"
-        app:layout_constraintHorizontal_bias="0.256"
+        app:layout_constraintHorizontal_bias="0.224"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageupload_profile"
         app:layout_constraintVertical_bias="0.0"
@@ -189,8 +189,8 @@
         app:layout_constraintHorizontal_bias="0.927"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/vector_4_profile"
-        app:layout_constraintVertical_bias="0.378"
-        app:srcCompat="@drawable/profile3" />
+        app:layout_constraintVertical_bias="0.366"
+        app:srcCompat="@drawable/profile_hover" />
 
     <ImageView
         android:id="@+id/imageupload_profile"
@@ -199,7 +199,7 @@
         android:background="@drawable/ripple"
         app:layout_constraintBottom_toBottomOf="@+id/imageprofile"
         app:layout_constraintEnd_toStartOf="@+id/imageprofile_profile"
-        app:layout_constraintHorizontal_bias="0.67"
+        app:layout_constraintHorizontal_bias="0.664"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageprofile_profile"
         app:layout_constraintVertical_bias="0.0"

@@ -9,6 +9,9 @@
     <string name="notification">
         Notification
     </string>
+    <string name="constribute">
+        Constribute
+    </string>
 
 
 </resources>

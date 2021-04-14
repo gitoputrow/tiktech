@@ -1,12 +1,13 @@
 package com.example.tiktech
 
-open class Regist(private var User: String, private var Pass: String, private var Name : String, private var Email : String,var Profile : String) : Data{
+open class Regist(private var User: String, private var Pass: String, private var Name : String, private var Email : String,var Profile : String,var fp :String) : Data{
     init {
         this.User = User
         this.Pass = Pass
         this.Name = Name
         this.Email = Email
         this.Profile = Profile
+        this.fp = fp
     }
     override fun getUser(): String { return this.User }
     override fun setUser(User: String) { this.User = User }
@@ -21,6 +22,7 @@ open class Regist(private var User: String, private var Pass: String, private va
                 " " + User +"\n" +
                 " " + Email +"\n" +
                 " " + Pass +"\n" +
-                " " + Profile
+                " " + Profile +"\n" +
+                " " + fp
     }
 }

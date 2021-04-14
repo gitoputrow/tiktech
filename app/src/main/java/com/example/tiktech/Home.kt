@@ -3,6 +3,7 @@ package com.example.tiktech
 import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -18,6 +20,8 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class Home : AppCompatActivity() , clicklistener{
     private var layoutManager: RecyclerView.LayoutManager? = null
@@ -35,6 +39,7 @@ class Home : AppCompatActivity() , clicklistener{
             val pindah = Intent(this,profile::class.java)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
         findViewById<ImageView>(R.id.imageupload).setOnClickListener {
@@ -42,12 +47,14 @@ class Home : AppCompatActivity() , clicklistener{
             pindah.putExtra("home",true)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
         findViewById<ImageView>(R.id.imagenotif).setOnClickListener {
             val pindah = Intent(this,notification::class.java)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
         findViewById<SwipeRefreshLayout>(R.id.refresh).setOnRefreshListener {
@@ -60,10 +67,11 @@ class Home : AppCompatActivity() , clicklistener{
             overridePendingTransition(0,0)
             findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = false
         }
-        recyclerViewInflater(ambil)
+        recyclerViewInflater()
     }
-
-    private fun recyclerViewInflater(ambil : Intent) {
+    data class list_class(var foto: String, var username: String,var childname: String , var name: String, var text: String, var date: String)
+    val listt = mutableListOf<list_class>()
+    private fun recyclerViewInflater() {
         database.orderByKey().addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -85,15 +93,30 @@ class Home : AppCompatActivity() , clicklistener{
                                             Log.d(ContentValues.TAG,childdata.toString());
                                             Log.d(ContentValues.TAG,childname.toString());
                                             var childnametext = snapshot.child(childname).child("text").value.toString()
-                                            var childnamefoto = snapshot.child(childname).child("foto").value.toString()
+                                            var foto_status = snapshot.child(childname).child("foto").value.toString()
+                                            var date = snapshot.child(childname).child("date").value.toString()
+                                            if (foto_status.equals("true")){
+                                                storage.child("post$username ")
+                                                        .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+                                                            override fun onSuccess(p0: Uri?) {
+                                                                database.child(childdata).child("activity")
+                                                                        .child("post")
+                                                                        .child(childname).child("idfoto").setValue(p0.toString())
+                                                            }
+                                                        })
+                                            }
+                                            var foto = snapshot.child(childname).child("idfoto").value.toString()
                                             if (childnametext.length > 20){
                                                 text = "${childnametext.removeRange(20,childnametext.length)}...."
-                                                list(childnamefoto,username,childname,name,text)
                                             }
                                             else{
                                                 text = childnametext
-                                                list(childnamefoto,username,childname,name,text)
                                             }
+                                            listt.add(list_class(foto,username,childname,name,text,date))
+                                        }
+                                        listt.sortByDescending { listClass -> listClass.date }
+                                        for (i in 0..listt.size-1){
+                                            list(i,listt)
                                         }
                                     }
                                 })
@@ -104,32 +127,14 @@ class Home : AppCompatActivity() , clicklistener{
         })
 
     }
-    fun list(childnamefoto : String,username : String,childname : String,name : String,text : String){
-        if (childnamefoto.equals("true")){
-            storage.child("post${username}")
-                    .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                        override fun onSuccess(p0: Uri?) {
-                            list.add(feeditem(p0.toString(),name,username, childname,text))
-                            findViewById<RecyclerView>(R.id.recyclerView).setHasFixedSize(true)
-                            findViewById<RecyclerView>(R.id.recyclerView).layoutManager = LinearLayoutManager(this@Home)
-                            val adapter = feedadapter(list,this@Home)
-                            findViewById<RecyclerView>(R.id.recyclerView).adapter = adapter
-                        }
-                    })
-        }
-        else{
-            storage.child("default.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                override fun onSuccess(p0: Uri?) {
-//                    Log.d(ContentValues.TAG,text);
-                    list.add(feeditem(p0.toString(),name,username, childname,text))
-                    findViewById<RecyclerView>(R.id.recyclerView).setHasFixedSize(true)
-                    findViewById<RecyclerView>(R.id.recyclerView).layoutManager = LinearLayoutManager(this@Home)
-                    val adapter = feedadapter(list,this@Home)
-                    findViewById<RecyclerView>(R.id.recyclerView).adapter = adapter
-                }
-            })
-        }
+    fun list(i: Int, listt : MutableList<list_class>){
+        list.add(feeditem(listt[i].foto,listt[i].name,listt[i].username, listt[i].childname,listt[i].text))
+        findViewById<RecyclerView>(R.id.recyclerView).setHasFixedSize(true)
+        findViewById<RecyclerView>(R.id.recyclerView).layoutManager = LinearLayoutManager(this@Home)
+        val adapter = feedadapter(list,this@Home)
+        findViewById<RecyclerView>(R.id.recyclerView).adapter = adapter
     }
+
 
     override fun onitemclick(item: feeditem, position: Int) {
         val pindah = Intent(this,readmore::class.java)
@@ -138,6 +143,7 @@ class Home : AppCompatActivity() , clicklistener{
         pindah.putExtra("postid",item.postid)
         pindah.putExtra("foto", item.photo)
         startActivity(pindah)
+        overridePendingTransition(0,0)
         finish()
     }
 }

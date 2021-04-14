@@ -5,6 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.media.Image
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,15 +18,19 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class Sharedpost : AppCompatActivity() {
@@ -32,6 +38,7 @@ class Sharedpost : AppCompatActivity() {
     val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
     var x = ""
     var foto = false
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sharedpost)
@@ -77,12 +84,14 @@ class Sharedpost : AppCompatActivity() {
             startActivityForResult(intent,2)
         }
         findViewById<Button>(R.id.button_sp).setOnClickListener {
+            var date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             var text = ""
             if (findViewById<EditText>(R.id.nulis_sp).visibility == View.VISIBLE){text = findViewById<EditText>(R.id.nulis_sp).text.toString()}
             else{text = findViewById<EditText>(R.id.nulis_spImage).text.toString()}
             var hashMapisi = HashMap<String, Any>()
             hashMapisi.put("text",text)
             hashMapisi.put("foto",foto.toString())
+            hashMapisi.put("date",date.toString())
             database.child("data${ambil.getStringExtra("username")}").child("activity").addListenerForSingleValueEvent(object :
                     ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -90,6 +99,24 @@ class Sharedpost : AppCompatActivity() {
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.hasChild("post")){
+                        if (foto == true){
+                            val bitmap1 = (findViewById<AppCompatImageView>(R.id.imagesp).drawable as BitmapDrawable).bitmap
+                            val baos = ByteArrayOutputStream()
+                            bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                            val data = baos.toByteArray()
+                            storage.child("post${ambil.getStringExtra("username")}")
+                                    .child("postingan${snapshot.child("post").childrenCount + 1}")
+                                    .putBytes(data)
+                        }
+                        else{
+                            storage.child("default.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+                                override fun onSuccess(p0: Uri?) {
+                                    database.child("data${ambil.getStringExtra("username")}").child("activity")
+                                            .child("post")
+                                            .child("postingan${snapshot.child("post").childrenCount + 1}").child("idfoto").setValue(p0.toString())
+                                }
+                            })
+                        }
                         database.child("data${ambil.getStringExtra("username")}").child("activity")
                                 .child("post")
                                 .child("postingan${snapshot.child("post").childrenCount + 1}")
@@ -108,17 +135,26 @@ class Sharedpost : AppCompatActivity() {
                                         finish()
                                     }
                                 }
+                    }
+                    else{
                         if (foto == true){
                             val bitmap1 = (findViewById<AppCompatImageView>(R.id.imagesp).drawable as BitmapDrawable).bitmap
                             val baos = ByteArrayOutputStream()
                             bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                             val data = baos.toByteArray()
-                                storage.child("post${ambil.getStringExtra("username")}")
-                                        .child("postingan${snapshot.child("post").childrenCount + 1}")
-                                        .putBytes(data)
+                            storage.child("post${ambil.getStringExtra("username")}")
+                                    .child("postingan1")
+                                    .putBytes(data)
                         }
-                    }
-                    else{
+                        else{
+                            storage.child("default.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+                                override fun onSuccess(p0: Uri?) {
+                                    database.child("data${ambil.getStringExtra("username")}").child("activity")
+                                            .child("post")
+                                            .child("postingan1").child("idfoto").setValue(p0.toString())
+                                }
+                            })
+                        }
                         database.child("data${ambil.getStringExtra("username")}").child("activity")
                                 .child("post")
                                 .child("postingan1")
@@ -137,15 +173,6 @@ class Sharedpost : AppCompatActivity() {
                                         finish()
                                     }
                                 }
-                        if (foto == true){
-                            val bitmap1 = (findViewById<AppCompatImageView>(R.id.imagesp).drawable as BitmapDrawable).bitmap
-                            val baos = ByteArrayOutputStream()
-                            bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                            val data = baos.toByteArray()
-                            storage.child("post${ambil.getStringExtra("username")}")
-                                    .child("postingan1")
-                                    .putBytes(data)
-                        }
                     }
                 }
 

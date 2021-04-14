@@ -3,6 +3,7 @@ package com.example.tiktech
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
@@ -12,12 +13,17 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 class Register_Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val database = FirebaseDatabase.getInstance().getReference()
+        val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
         setContentView(R.layout.activity_register_)
         hideshow(findViewById(R.id.hidepass),findViewById(R.id.showpass),findViewById(R.id.passwordinput))
         hideshow(findViewById(R.id.hideconpass),findViewById(R.id.showconpass),findViewById(R.id.confirmpasswordinput))
@@ -59,7 +65,7 @@ class Register_Activity : AppCompatActivity() {
                                 if (snapshot.hasChild("data${findViewById<EditText>(R.id.usernameinput).text}")) {
                                     Toast.makeText(baseContext, "Username Sudah Terpakai", Toast.LENGTH_SHORT).show()
                                 } else {
-                                    masuk(database)
+                                    masuk(database,storage)
 
                                 }
                             }
@@ -94,19 +100,25 @@ class Register_Activity : AppCompatActivity() {
         anim.startDelay = delay
         anim.start()
     }
-    fun masuk(database : DatabaseReference){
-        database.child("data${findViewById<EditText>(R.id.usernameinput).text}")
-                .setValue(Regist(findViewById<EditText>(R.id.usernameinput).text.toString(),
-                        findViewById<EditText>(R.id.passwordinput).text.toString(),
-                        findViewById<EditText>(R.id.nameinput).text.toString(),
-                        findViewById<EditText>(R.id.emailinput).text.toString(),"false"))
-                .addOnSuccessListener {
-                    activty(database)
-                    Toast.makeText(baseContext,"Berhasil",Toast.LENGTH_SHORT).show()
-                    val pindah = Intent(this@Register_Activity,Login_activty::class.java)
-                    startActivity(pindah)
-                    finish()
-                }
+    fun masuk(database : DatabaseReference,storage: StorageReference){
+        storage.child("profile2.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
+            override fun onSuccess(p0: Uri?) {
+                database.child("data${findViewById<EditText>(R.id.usernameinput).text}")
+                        .setValue(Regist(findViewById<EditText>(R.id.usernameinput).text.toString(),
+                                findViewById<EditText>(R.id.passwordinput).text.toString(),
+                                findViewById<EditText>(R.id.nameinput).text.toString(),
+                                findViewById<EditText>(R.id.emailinput).text.toString(),"false",p0.toString()))
+                        .addOnSuccessListener {
+                            activty(database)
+                            Toast.makeText(baseContext,"Berhasil",Toast.LENGTH_SHORT).show()
+                            val pindah = Intent(this@Register_Activity,Login_activty::class.java)
+                            startActivity(pindah)
+                            finish()
+                        }
+            }
+
+        })
+
     }
     fun activty(database : DatabaseReference){
         var hashMaplike = HashMap<String, Any>()

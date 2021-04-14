@@ -1,5 +1,6 @@
 package com.example.tiktech
 
+import android.net.Uri
 import android.widget.ImageView
 import com.google.android.material.imageview.ShapeableImageView
 

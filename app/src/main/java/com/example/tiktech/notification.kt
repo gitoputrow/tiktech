@@ -30,6 +30,7 @@ class notification : AppCompatActivity(), clicklistener_notif {
             val pindah = Intent(this,profile::class.java)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
 
@@ -38,6 +39,7 @@ class notification : AppCompatActivity(), clicklistener_notif {
             pindah.putExtra("username",ambil.getStringExtra("username"))
             pindah.putExtra("notif",true)
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
         findViewById<ImageView>(R.id.backarrow_notif).setOnClickListener {
@@ -50,11 +52,13 @@ class notification : AppCompatActivity(), clicklistener_notif {
             val pindah = Intent(this,Home::class.java)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
         recyclerViewInflater(ambil)
     }
-
+    data class list_class(var foto: String, var username: String,var childname: String , var name: String, var text: String,var photopost :String, var date: String)
+    val listt = mutableListOf<list_class>()
     private fun recyclerViewInflater(ambil: Intent?) {
         database.child("data${user}").child("activity").child("post").addListenerForSingleValueEvent(object :
             ValueEventListener{
@@ -65,70 +69,36 @@ class notification : AppCompatActivity(), clicklistener_notif {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (child in snapshot.children){
                     var childname = child.key.toString()
+                    var photopost = snapshot.child(childname).child("idfoto").value.toString()
                     if (snapshot.child(childname).hasChild("likes")){
-                        for (user in snapshot.child(childname).child("likes").children){
-                            var user = user.key.toString()
-                            Log.d(ContentValues.TAG,user);
-                            if (snapshot.child(childname).child("likes").child(user).child("value").value.toString().equals("true")){
+                        for (i in snapshot.child(childname).child("likes").children){
+                            var userr = i.key.toString()
+                            Log.d(ContentValues.TAG,userr);
+                            if (snapshot.child(childname).child("likes").child(userr).child("value").value.toString().equals("true")){
                                 var text = " liked on your post"
-                                list(user,text,childname,snapshot.child(childname).child("foto").value.toString())
+                                var date = snapshot.child(childname).child("likes").child("user").child("date").value.toString()
+                                listt.add(list_class(snapshot.child(childname).child("likes").child(userr).child("fpuser").value.toString()
+                                        ,user,childname, snapshot.child(childname).child("likes").child(userr).child("nameuser").value.toString(),
+                                        text,photopost,date))
                             }
                         }
                     }
                 }
+                listt.sortByDescending { listClass -> listClass.date }
+                for (i in 0..listt.size-1){
+                    list(i,listt)
+                }
             }
 
         })
     }
-    fun list(userliked : String,text : String,postid : String,fotopost : String){
-        database.child("data${userliked}").addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.child("profile").value.toString().equals("true")){
-                    storage.child("profile${userliked}").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
-                        override fun onSuccess(p0: Uri?) {
-                            list_post(fotopost,postid,text,userliked,p0.toString())
-                        }
-
-                    })
-                }
-                else{
-                    storage.child("profile.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
-                        override fun onSuccess(p0: Uri?) {
-                            list_post(fotopost,postid,text,userliked,p0.toString())
-                        }
-
-                    })
-                }
-            }
-        })
-    }
-    fun list_post(fotopost: String,postid: String,text: String,userliked: String,fotoprofile : String){
-        if (fotopost.equals("true")){
-            storage.child("post${user}").child(postid).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
-                override fun onSuccess(p0: Uri?) {
-                    list.add(notifitem(fotoprofile,text,userliked,postid,p0.toString()))
-                    findViewById<RecyclerView>(R.id.recyclerView_notif).setHasFixedSize(true)
-                    findViewById<RecyclerView>(R.id.recyclerView_notif).layoutManager = LinearLayoutManager(this@notification)
-                    val adapter = notifadapter(list,this@notification)
-                    findViewById<RecyclerView>(R.id.recyclerView_notif).adapter = adapter
-                }
-            })
-        }
-        else{
-            storage.child("default.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
-                override fun onSuccess(p0: Uri?) {
-                    list.add(notifitem(fotoprofile,text,userliked,postid,p0.toString()))
-                    findViewById<RecyclerView>(R.id.recyclerView_notif).setHasFixedSize(true)
-                    findViewById<RecyclerView>(R.id.recyclerView_notif).layoutManager = LinearLayoutManager(this@notification)
-                    val adapter = notifadapter(list,this@notification)
-                    findViewById<RecyclerView>(R.id.recyclerView_notif).adapter = adapter
-                }
-            })
-        }
+    fun list(i :Int,listt :MutableList<list_class>){
+        list.add(notifitem(listt[i].foto,listt[i].text,listt[i].username,listt[i].childname,listt[i].photopost))
+        findViewById<RecyclerView>(R.id.recyclerView_notif).setHasFixedSize(true)
+        findViewById<RecyclerView>(R.id.recyclerView_notif).layoutManager = LinearLayoutManager(this@notification)
+        val adapter = notifadapter(list,this@notification)
+        findViewById<RecyclerView>(R.id.recyclerView_notif).adapter = adapter
     }
 
     override fun onnotifclick(item: notifitem, position: Int) {

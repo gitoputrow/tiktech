@@ -3,20 +3,25 @@ package com.example.tiktech
 import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import coil.load
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class readmore : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_readmore)
@@ -80,18 +85,32 @@ class readmore : AppCompatActivity() {
             }
         })
         findViewById<ImageView>(R.id.like).setOnClickListener {
+            var date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             var hashMaplikes = HashMap<String, Any>()
             hashMaplikes.put("value","true")
+            hashMaplikes.put("date",date.toString())
             var hashMapliked = HashMap<String, Any>()
             hashMapliked.put("value","true")
             findViewById<ImageView>(R.id.like).visibility = View.INVISIBLE
             findViewById<ImageView>(R.id.liked).visibility = View.VISIBLE
+            database.child("data${ambil.getStringExtra("username")}").addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    hashMaplikes.put("fpuser",snapshot.child("fp").value.toString())
+                    hashMaplikes.put("nameuser",snapshot.child("name").value.toString())
+                    database.child("data${ambil.getStringExtra("usernamepost")}").child("activity")
+                        .child("post").child(ambil.getStringExtra("postid").toString()).child("likes")
+                        .child(ambil.getStringExtra("username").toString()).setValue(hashMaplikes)
+                }
+
+            })
             database.child("data${ambil.getStringExtra("username")}").child("activity")
                     .child("liked").child(ambil.getStringExtra("usernamepost").toString())
                     .child(ambil.getStringExtra("postid").toString()).setValue(hashMapliked)
-            database.child("data${ambil.getStringExtra("usernamepost")}").child("activity")
-                    .child("post").child(ambil.getStringExtra("postid").toString()).child("likes")
-                    .child(ambil.getStringExtra("username").toString()).setValue(hashMaplikes)
+
         }
         findViewById<ImageView>(R.id.liked).setOnClickListener {
             findViewById<ImageView>(R.id.liked).visibility = View.INVISIBLE
@@ -103,28 +122,40 @@ class readmore : AppCompatActivity() {
                     .child("post").child(ambil.getStringExtra("postid").toString())
                     .child("likes").child(ambil.getStringExtra("username").toString()).removeValue()
         }
+        findViewById<ImageView>(R.id.comment).setOnClickListener {
+            val pindah = Intent(this,contribute::class.java)
+            pindah.putExtra("username",ambil.getStringExtra("username"))
+            pindah.putExtra("postid",ambil.getStringExtra("postid"))
+            pindah.putExtra("usernamepost",ambil.getStringExtra("usernamepost"))
+            pindah.putExtra("foto",ambil.getStringExtra("foto"))
+            startActivity(pindah)
+        }
         findViewById<ImageView>(R.id.imagenotif_readmore).setOnClickListener {
             val pindah = Intent(this,notification::class.java)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
         findViewById<ImageView>(R.id.imageupload_readmore).setOnClickListener {
             val pindah = Intent(this,Sharedpost::class.java)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
         findViewById<ImageView>(R.id.imagehome_readmore).setOnClickListener {
             val pindah = Intent(this,Home::class.java)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
         findViewById<ImageView>(R.id.imageprofile_readmore).setOnClickListener {
             val pindah = Intent(this,profile::class.java)
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
+            overridePendingTransition(0,0)
             finish()
         }
     }
