@@ -88,6 +88,12 @@ class setting_menu : AppCompatActivity() {
                                                         .child("likes").child(ambil.getStringExtra("username").toString()).removeValue()
                                             }
                                         }
+                                        if (snapshot.child(childpostname).hasChild("constribute")){
+                                            if (snapshot.child(childpostname).child("constribute").hasChild(ambil.getStringExtra("username").toString())){
+                                                database.child(childuser).child("activity").child("post").child(childpostname)
+                                                        .child("constribute").child(ambil.getStringExtra("username").toString()).removeValue()
+                                            }
+                                        }
                                     }
                                 }
 

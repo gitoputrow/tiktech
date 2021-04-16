@@ -83,44 +83,39 @@ class Home : AppCompatActivity() , clicklistener{
                     var username = snapshot.child(childdata).child("user").value.toString()
                     if (snapshot.child(childdata).child("activity").hasChild("post")){
                         var name = snapshot.child(childdata).child("name").value.toString()
-                        database.child(childdata).child("activity").child("post").orderByKey()
-                                .addListenerForSingleValueEvent(object : ValueEventListener {
-                                    override fun onCancelled(error: DatabaseError) {}
-                                    override fun onDataChange(snapshot: DataSnapshot) {
-                                        var text = ""
-                                        for (child in snapshot.children){
-                                            var childname = child.key.toString()
-                                            Log.d(ContentValues.TAG,childdata.toString());
-                                            Log.d(ContentValues.TAG,childname.toString());
-                                            var childnametext = snapshot.child(childname).child("text").value.toString()
-                                            var foto_status = snapshot.child(childname).child("foto").value.toString()
-                                            var date = snapshot.child(childname).child("date").value.toString()
-                                            if (foto_status.equals("true")){
-                                                storage.child("post$username ")
-                                                        .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                                                            override fun onSuccess(p0: Uri?) {
-                                                                database.child(childdata).child("activity")
-                                                                        .child("post")
-                                                                        .child(childname).child("idfoto").setValue(p0.toString())
-                                                            }
-                                                        })
+                        var text = ""
+                        for (child in snapshot.child(childdata).child("activity").child("post").children){
+                            var childname = child.key.toString()
+                            Log.d(ContentValues.TAG,childdata.toString());
+                            Log.d(ContentValues.TAG,username.toString());
+                            var childnametext = snapshot.child(childdata).child("activity").child("post").child(childname).child("text").value.toString()
+                            var foto_status = snapshot.child(childdata).child("activity").child("post").child(childname).child("foto").value.toString()
+                            var date = snapshot.child(childdata).child("activity").child("post").child(childname).child("date").value.toString()
+                            if (foto_status.equals("true")){
+                                storage.child("post$username")
+                                        .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+                                            override fun onSuccess(p0: Uri?) {
+                                                database.child(childdata).child("activity")
+                                                        .child("post")
+                                                        .child(childname).child("idfoto").setValue(p0.toString())
                                             }
-                                            var foto = snapshot.child(childname).child("idfoto").value.toString()
-                                            if (childnametext.length > 20){
-                                                text = "${childnametext.removeRange(20,childnametext.length)}...."
-                                            }
-                                            else{
-                                                text = childnametext
-                                            }
-                                            listt.add(list_class(foto,username,childname,name,text,date))
-                                        }
-                                        listt.sortByDescending { listClass -> listClass.date }
-                                        for (i in 0..listt.size-1){
-                                            list(i,listt)
-                                        }
-                                    }
-                                })
+                                        })
+                            }
+                            var foto = snapshot.child(childdata).child("activity").child("post").child(childname).child("idfoto").value.toString()
+                            if (childnametext.length > 20){
+                                text = "${childnametext.removeRange(20,childnametext.length)}...."
+                            }
+                            else{
+                                text = childnametext
+                            }
+                            listt.add(list_class(foto,username,childname,name,text,date))
+                        }
                     }
+                }
+                listt.sortByDescending { listClass -> listClass.date }
+                Log.d(ContentValues.TAG,listt.toString());
+                for (i in 0..listt.size-1){
+                    list(i,listt)
                 }
 
             }

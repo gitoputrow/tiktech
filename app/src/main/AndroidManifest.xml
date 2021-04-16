@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TIKTECH">
-        <activity android:name=".komenitem"></activity>
+        <activity android:name=".komenlayout"></activity>
         <activity android:name=".contribute" />
         <activity android:name=".NotifitemActivity" />
         <activity android:name=".readmore" />

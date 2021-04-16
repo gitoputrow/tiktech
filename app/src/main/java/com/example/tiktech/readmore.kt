@@ -60,6 +60,17 @@ class readmore : AppCompatActivity() {
                         else{
                             findViewById<TextView>(R.id.number_like).setText("0")
                         }
+                        if (snapshot.hasChild("constribute")){
+                            var total = 0
+                            for (usernameid in snapshot.child("constribute").children){
+                                var username_id = usernameid.key.toString()
+                                total = total + snapshot.child("constribute").child(username_id).child("comment").childrenCount.toInt()
+                            }
+                            findViewById<TextView>(R.id.number_comment).setText(total.toString())
+                        }
+                        else{
+                            findViewById<TextView>(R.id.number_comment).setText("0")
+                        }
                     }
         })
         database.child("data${ambil.getStringExtra("username")}").child("activity").addValueEventListener(object :
@@ -99,8 +110,6 @@ class readmore : AppCompatActivity() {
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    hashMaplikes.put("fpuser",snapshot.child("fp").value.toString())
-                    hashMaplikes.put("nameuser",snapshot.child("name").value.toString())
                     database.child("data${ambil.getStringExtra("usernamepost")}").child("activity")
                         .child("post").child(ambil.getStringExtra("postid").toString()).child("likes")
                         .child(ambil.getStringExtra("username").toString()).setValue(hashMaplikes)

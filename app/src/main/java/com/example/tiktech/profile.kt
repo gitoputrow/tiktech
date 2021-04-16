@@ -69,7 +69,8 @@ class profile : AppCompatActivity() , clicklistener{
                     findViewById<TextView>(R.id.angkapost).setText(snapshot.child("activity").child("post").childrenCount.toString())
                     database.child("data${ambil.getStringExtra("username")}").child("activity").child("post")
                             .addListenerForSingleValueEvent(object : ValueEventListener{
-                                var total = 0
+                                var total_likes = 0
+                                var total_constribute = 0
                                 override fun onCancelled(error: DatabaseError) {
                                     TODO("Not yet implemented")
                                 }
@@ -78,10 +79,17 @@ class profile : AppCompatActivity() , clicklistener{
                                     for (child in snapshot.children){
                                         var childname = child.key.toString()
                                         if (snapshot.child(childname).hasChild("likes")){
-                                            total = (total + snapshot.child(childname).child("likes").childrenCount).toInt()
+                                            total_likes = (total_likes + snapshot.child(childname).child("likes").childrenCount).toInt()
+                                        }
+                                        if (snapshot.child(childname).hasChild("constribute")){
+                                            for (child in snapshot.child(childname).child("constribute").children){
+                                                var child_name = child.key.toString()
+                                                total_constribute = total_constribute + snapshot.child(childname).child("constribute").child(child_name).child("comment").childrenCount.toInt()
+                                            }
                                         }
                                     }
-                                    findViewById<TextView>(R.id.angkalikes).setText(total.toString())
+                                    findViewById<TextView>(R.id.angkacontribution).setText(total_constribute.toString())
+                                    findViewById<TextView>(R.id.angkalikes).setText(total_likes.toString())
                                 }
 
                             })
