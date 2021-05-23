@@ -7,12 +7,12 @@
     android:background="@color/white"
     tools:context=".homescreen_Activity">
 
-    <ImageView
+    <View
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="535dp"
-        android:src="@drawable/vector_1"
+        android:background="@drawable/vector_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

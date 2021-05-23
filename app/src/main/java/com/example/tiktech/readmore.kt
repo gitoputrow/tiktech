@@ -60,11 +60,11 @@ class readmore : AppCompatActivity() {
                         else{
                             findViewById<TextView>(R.id.number_like).setText("0")
                         }
-                        if (snapshot.hasChild("constribute")){
+                        if (snapshot.hasChild("contribute")){
                             var total = 0
-                            for (usernameid in snapshot.child("constribute").children){
+                            for (usernameid in snapshot.child("contribute").children){
                                 var username_id = usernameid.key.toString()
-                                total = total + snapshot.child("constribute").child(username_id).child("comment").childrenCount.toInt()
+                                total = total + snapshot.child("contribute").child(username_id).child("comment").childrenCount.toInt()
                             }
                             findViewById<TextView>(R.id.number_comment).setText(total.toString())
                         }

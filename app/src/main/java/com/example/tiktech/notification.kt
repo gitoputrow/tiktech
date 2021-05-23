@@ -94,15 +94,15 @@ class notification : AppCompatActivity(), clicklistener_notif {
                             }
                         }
                     }
-                    if (snapshot.child(childname).hasChild("constribute")){
-                        for (userr in snapshot.child(childname).child("constribute").children){
+                    if (snapshot.child(childname).hasChild("contribute")){
+                        for (userr in snapshot.child(childname).child("contribute").children){
                             var user_name = userr.key.toString()
-                            var fp = snapshot.child(childname).child("constribute").child(user_name).child("fp").value.toString()
-                            for (comment in  snapshot.child(childname).child("constribute").child(user_name).child("comment").children){
+                            var fp = snapshot.child(childname).child("contribute").child(user_name).child("fp").value.toString()
+                            for (comment in  snapshot.child(childname).child("contribute").child(user_name).child("comment").children){
                                 var comment_id = comment.key.toString()
-                                if (snapshot.child(childname).child("constribute").child(user_name).child("comment").child(comment_id).child("value").value.toString().equals("true")){
-                                    var date = snapshot.child(childname).child("constribute").child(user_name).child("comment").child(comment_id).child("date").value.toString()
-                                    var text = snapshot.child(childname).child("constribute").child(user_name).child("comment").child(comment_id).child("text").value.toString()
+                                if (snapshot.child(childname).child("contribute").child(user_name).child("comment").child(comment_id).child("value").value.toString().equals("true")){
+                                    var date = snapshot.child(childname).child("contribute").child(user_name).child("comment").child(comment_id).child("date").value.toString()
+                                    var text = snapshot.child(childname).child("contribute").child(user_name).child("comment").child(comment_id).child("text").value.toString()
                                     if (text.length > 4){
                                         text = " comment '${text.removeRange(4,text.length)}...' on your post"
                                     }
@@ -138,7 +138,7 @@ class notification : AppCompatActivity(), clicklistener_notif {
         database.child("data${user}").child("activity").child("post")
                 .child(item.postid.toString()).child("likes").child(item.username.toString()).child("value").setValue("false")
         database.child("data${user}").child("activity").child("post").child(item.postid.toString())
-                .child("constribute").child(item.username.toString()).child("comment")
+                .child("contribute").child(item.username.toString()).child("comment")
                 .child(item.commentid.toString()).child("value").setValue("false")
         val pindah = Intent(this,readmore::class.java)
         pindah.putExtra("username",user)

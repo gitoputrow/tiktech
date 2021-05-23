@@ -91,16 +91,16 @@ class Home : AppCompatActivity() , clicklistener{
                             var childnametext = snapshot.child(childdata).child("activity").child("post").child(childname).child("text").value.toString()
                             var foto_status = snapshot.child(childdata).child("activity").child("post").child(childname).child("foto").value.toString()
                             var date = snapshot.child(childdata).child("activity").child("post").child(childname).child("date").value.toString()
-                            if (foto_status.equals("true")){
-                                storage.child("post$username")
-                                        .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                                            override fun onSuccess(p0: Uri?) {
-                                                database.child(childdata).child("activity")
-                                                        .child("post")
-                                                        .child(childname).child("idfoto").setValue(p0.toString())
-                                            }
-                                        })
-                            }
+//                            if (foto_status.equals("true")){
+//                                storage.child("post$username")
+//                                        .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+//                                            override fun onSuccess(p0: Uri?) {
+//                                                database.child(childdata).child("activity")
+//                                                        .child("post")
+//                                                        .child(childname).child("idfoto").setValue(p0.toString())
+//                                            }
+//                                        })
+//                            }
                             var foto = snapshot.child(childdata).child("activity").child("post").child(childname).child("idfoto").value.toString()
                             if (childnametext.length > 20){
                                 text = "${childnametext.removeRange(20,childnametext.length)}...."

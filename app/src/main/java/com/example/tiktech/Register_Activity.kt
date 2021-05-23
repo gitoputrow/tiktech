@@ -9,10 +9,7 @@ import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
@@ -65,7 +62,7 @@ class Register_Activity : AppCompatActivity() {
                                 if (snapshot.hasChild("data${findViewById<EditText>(R.id.usernameinput).text}")) {
                                     Toast.makeText(baseContext, "Username Sudah Terpakai", Toast.LENGTH_SHORT).show()
                                 } else {
-                                    masuk(database,storage)
+                                    masuk(database,storage,findViewById(R.id.masuk),findViewById(R.id.progressBar_regist))
 
                                 }
                             }
@@ -100,16 +97,19 @@ class Register_Activity : AppCompatActivity() {
         anim.startDelay = delay
         anim.start()
     }
-    fun masuk(database : DatabaseReference,storage: StorageReference){
+    fun masuk(database : DatabaseReference,storage: StorageReference,button: Button,loading: ProgressBar){
+        button.visibility = View.INVISIBLE
+        loading.visibility = View.VISIBLE
         storage.child("profile2.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
             override fun onSuccess(p0: Uri?) {
+                activty(database)
                 database.child("data${findViewById<EditText>(R.id.usernameinput).text}")
                         .setValue(Regist(findViewById<EditText>(R.id.usernameinput).text.toString(),
                                 findViewById<EditText>(R.id.passwordinput).text.toString(),
                                 findViewById<EditText>(R.id.nameinput).text.toString(),
                                 findViewById<EditText>(R.id.emailinput).text.toString(),"false",p0.toString()))
                         .addOnSuccessListener {
-                            activty(database)
+                            loading.visibility = View.INVISIBLE
                             Toast.makeText(baseContext,"Berhasil",Toast.LENGTH_SHORT).show()
                             val pindah = Intent(this@Register_Activity,Login_activty::class.java)
                             startActivity(pindah)

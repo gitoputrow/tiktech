@@ -81,10 +81,10 @@ class profile : AppCompatActivity() , clicklistener{
                                         if (snapshot.child(childname).hasChild("likes")){
                                             total_likes = (total_likes + snapshot.child(childname).child("likes").childrenCount).toInt()
                                         }
-                                        if (snapshot.child(childname).hasChild("constribute")){
-                                            for (child in snapshot.child(childname).child("constribute").children){
+                                        if (snapshot.child(childname).hasChild("contribute")){
+                                            for (child in snapshot.child(childname).child("contribute").children){
                                                 var child_name = child.key.toString()
-                                                total_constribute = total_constribute + snapshot.child(childname).child("constribute").child(child_name).child("comment").childrenCount.toInt()
+                                                total_constribute = total_constribute + snapshot.child(childname).child("contribute").child(child_name).child("comment").childrenCount.toInt()
                                             }
                                         }
                                     }

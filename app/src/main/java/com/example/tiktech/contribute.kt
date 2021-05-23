@@ -4,7 +4,10 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,28 +41,36 @@ class contribute : AppCompatActivity() {
             finish()
         }
         findViewById<ImageView>(R.id.imageView7).setOnClickListener {
-            var date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-            var hashMapcomment = HashMap<String, Any>()
-            hashMapcomment.put("text",findViewById<TextInputEditText>(R.id.comment_input).text.toString())
-            hashMapcomment.put("date",date)
-            hashMapcomment.put("value","true")
-            database.child("data${ambil.getStringExtra("usernamepost")}").addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
+            if (findViewById<TextInputEditText>(R.id.comment_input).text.toString().isNotEmpty()){
+                var date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                var hashMapcomment = HashMap<String, Any>()
+                hashMapcomment.put("text",findViewById<TextInputEditText>(R.id.comment_input).text.toString())
+                hashMapcomment.put("date",date)
+                hashMapcomment.put("value","true")
+                database.child("data${ambil.getStringExtra("usernamepost")}").addListenerForSingleValueEvent(object : ValueEventListener{
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
 
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    database.child("data${ambil.getStringExtra("usernamepost")}").child("activity").child("post")
-                            .child(ambil.getStringExtra("postid").toString()).child("constribute")
-                            .child(ambil.getStringExtra("username").toString()).child("comment").push().setValue(hashMapcomment)
-                            .addOnSuccessListener {
-                                findViewById<TextInputEditText>(R.id.comment_input).setText("")
-                            }
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        findViewById<ImageView>(R.id.imageView7).visibility = View.INVISIBLE
+                        findViewById<ProgressBar>(R.id.progressBar_komen).visibility = View.VISIBLE
+                        database.child("data${ambil.getStringExtra("usernamepost")}").child("activity").child("post")
+                                .child(ambil.getStringExtra("postid").toString()).child("contribute")
+                                .child(ambil.getStringExtra("username").toString()).child("comment").push().setValue(hashMapcomment)
+                                .addOnSuccessListener {
+                                    findViewById<TextInputEditText>(R.id.comment_input).setText("")
+                                    findViewById<ProgressBar>(R.id.progressBar_komen).visibility = View.INVISIBLE
+                                    findViewById<ImageView>(R.id.imageView7).visibility = View.VISIBLE
+                                }
 
-                }
+                    }
 
-            })
-
+                })
+            }
+            else{
+                Toast.makeText(baseContext,"isi pesan",Toast.LENGTH_SHORT).show()
+            }
         }
         findViewById<SwipeRefreshLayout>(R.id.refresh_constribute).setOnRefreshListener{
             findViewById<SwipeRefreshLayout>(R.id.refresh_constribute).isRefreshing = true
@@ -85,9 +96,9 @@ class contribute : AppCompatActivity() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString()).hasChild("constribute")){
+                if (snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString()).hasChild("contribute")){
                     for (username_cm in snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString())
-                            .child("constribute").children){
+                            .child("contribute").children){
                         var username_cmid = username_cm.key.toString()
                         database.child("data${username_cmid}").addListenerForSingleValueEvent(object : ValueEventListener{
                             override fun onCancelled(error: DatabaseError) {
@@ -96,7 +107,7 @@ class contribute : AppCompatActivity() {
 
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 database.child("data${ambil.getStringExtra("usernamepost")}").child("activity").child("post")
-                                        .child(ambil.getStringExtra("postid").toString()).child("constribute")
+                                        .child(ambil.getStringExtra("postid").toString()).child("contribute")
                                         .child(username_cmid).child("fp")
                                         .setValue(snapshot.child("fp").value.toString())
                             }
@@ -104,14 +115,14 @@ class contribute : AppCompatActivity() {
                         })
 
                         for (comment_id in snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString())
-                                .child("constribute").child(username_cmid).child("comment").children){
+                                .child("contribute").child(username_cmid).child("comment").children){
                             var comment_idd = comment_id.key.toString()
                             var text = snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString())
-                                    .child("constribute").child(username_cmid).child("comment").child(comment_idd).child("text").value.toString()
+                                    .child("contribute").child(username_cmid).child("comment").child(comment_idd).child("text").value.toString()
                             var date = snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString())
-                                    .child("constribute").child(username_cmid).child("comment").child(comment_idd).child("date").value.toString()
+                                    .child("contribute").child(username_cmid).child("comment").child(comment_idd).child("date").value.toString()
                             var foto = snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString())
-                                    .child("constribute").child(username_cmid).child("fp").value.toString()
+                                    .child("contribute").child(username_cmid).child("fp").value.toString()
                             listt.add(list_class(username_cmid,foto,text,date))
                         }
                     }
