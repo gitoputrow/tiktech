@@ -12,12 +12,9 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
 import android.text.TextWatcher
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.isVisible
@@ -84,7 +81,9 @@ class Sharedpost : AppCompatActivity() {
             startActivityForResult(intent,2)
         }
         findViewById<Button>(R.id.button_sp).setOnClickListener {
-            var id = database.push().key
+            findViewById<Button>(R.id.button_sp).visibility = View.INVISIBLE
+            findViewById<ProgressBar>(R.id.progressBar_sp).visibility = View.VISIBLE
+            var id = database.push().key.toString()
             var date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             var text = ""
             if (findViewById<EditText>(R.id.nulis_sp).visibility == View.VISIBLE){text = findViewById<EditText>(R.id.nulis_sp).text.toString()}
@@ -99,108 +98,69 @@ class Sharedpost : AppCompatActivity() {
                     TODO("Not yet implemented")
                 }
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    if (snapshot.hasChild("post")){
-                        database.child("data${ambil.getStringExtra("username")}").child("activity")
-                                .child("post")
-                                .child("postingan${snapshot.child("post").childrenCount + 1}")
-                                .setValue(hashMapisi)
-                        if (foto == true){
-                            val bitmap1 = (findViewById<AppCompatImageView>(R.id.imagesp).drawable as BitmapDrawable).bitmap
-                            val baos = ByteArrayOutputStream()
-                            bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                            val data = baos.toByteArray()
-                            storage.child("post${ambil.getStringExtra("username")}")
-                                    .child("postingan${snapshot.child("post").childrenCount + 1}")
-                                    .putBytes(data).addOnCompleteListener {
-                                        if (it.isSuccessful){
-                                            database.child("data${ambil.getStringExtra("username")}").child("activity")
-                                                    .child("post")
-                                                    .child("postingan${snapshot.child("post").childrenCount + 1}").child("idfoto")
-                                                    .setValue(it.result.toString())
-                                                    .addOnSuccessListener {
-                                                        if(ambil.getBooleanExtra("profile",false)){
-                                                            val pindah = Intent(this@Sharedpost,profile::class.java)
-                                                            pindah.putExtra("username",ambil.getStringExtra("username"))
-                                                            startActivity(pindah)
-                                                            finish()
-                                                        }
-                                                        else{
-                                                            val pindah = Intent(this@Sharedpost,Home::class.java)
-                                                            pindah.putExtra("username",ambil.getStringExtra("username"))
-                                                            startActivity(pindah)
-                                                            finish()
-                                                        }
+                    if (foto == true){
+                        val bitmap1 = (findViewById<AppCompatImageView>(R.id.imagesp).drawable as BitmapDrawable).bitmap
+                        val baos = ByteArrayOutputStream()
+                        bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        val data = baos.toByteArray()
+                        storage.child("post${ambil.getStringExtra("username")}")
+                                .child(id)
+                                .putBytes(data).addOnCompleteListener {
+                                    if (it.isSuccessful){
+                                        storage.child("post${ambil.getStringExtra("username")}")
+                                                .child(id).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
+                                                    override fun onSuccess(p0: Uri?) {
+                                                        hashMapisi.put("idfoto",p0.toString())
+                                                        database.child("data${ambil.getStringExtra("username")}").child("activity")
+                                                                .child("post")
+                                                                .child(id)
+                                                                .setValue(hashMapisi)
+                                                                .addOnSuccessListener {
+                                                                    if(ambil.getBooleanExtra("profile",false)){
+                                                                        val pindah = Intent(this@Sharedpost,profile::class.java)
+                                                                        pindah.putExtra("username",ambil.getStringExtra("username"))
+                                                                        startActivity(pindah)
+                                                                        finish()
+                                                                    }
+                                                                    else{
+                                                                        val pindah = Intent(this@Sharedpost,Home::class.java)
+                                                                        pindah.putExtra("username",ambil.getStringExtra("username"))
+                                                                        startActivity(pindah)
+                                                                        finish()
+                                                                    }
+                                                                }
                                                     }
-                                        }
 
+                                                })
                                     }
-                        }
-                        else{
-                            storage.child("default.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                                override fun onSuccess(p0: Uri?) {
-                                    database.child("data${ambil.getStringExtra("username")}").child("activity")
-                                            .child("post")
-                                            .child("postingan${snapshot.child("post").childrenCount + 1}").child("idfoto")
-                                            .setValue(p0.toString())
-                                            .addOnSuccessListener {
-                                                if(ambil.getBooleanExtra("profile",false)){
-                                                    val pindah = Intent(this@Sharedpost,profile::class.java)
-                                                    pindah.putExtra("username",ambil.getStringExtra("username"))
-                                                    startActivity(pindah)
-                                                    finish()
-                                                }
-                                                else{
-                                                    val pindah = Intent(this@Sharedpost,Home::class.java)
-                                                    pindah.putExtra("username",ambil.getStringExtra("username"))
-                                                    startActivity(pindah)
-                                                    finish()
-                                                }
-                                            }
                                 }
-                            })
                         }
-
-                    }
                     else{
-                        if (foto == true){
-                            val bitmap1 = (findViewById<AppCompatImageView>(R.id.imagesp).drawable as BitmapDrawable).bitmap
-                            val baos = ByteArrayOutputStream()
-                            bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                            val data = baos.toByteArray()
-                            storage.child("post${ambil.getStringExtra("username")}")
-                                    .child("postingan1")
-                                    .putBytes(data)
-                        }
-                        else{
-                            storage.child("default.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                                override fun onSuccess(p0: Uri?) {
-                                    database.child("data${ambil.getStringExtra("username")}").child("activity")
-                                            .child("post")
-                                            .child("postingan1").child("idfoto").setValue(p0.toString())
-                                }
-                            })
-                        }
-                        database.child("data${ambil.getStringExtra("username")}").child("activity")
-                                .child("post")
-                                .child("postingan1")
-                                .setValue(hashMapisi)
-                                .addOnSuccessListener {
-                                    if(ambil.getBooleanExtra("profile",false)){
-                                        val pindah = Intent(this@Sharedpost,profile::class.java)
-                                        pindah.putExtra("username",ambil.getStringExtra("username"))
-                                        startActivity(pindah)
-                                        finish()
-                                    }
-                                    else{
-                                        val pindah = Intent(this@Sharedpost,Home::class.java)
-                                        pindah.putExtra("username",ambil.getStringExtra("username"))
-                                        startActivity(pindah)
-                                        finish()
-                                    }
-                                }
+                        storage.child("default.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+                            override fun onSuccess(p0: Uri?) {
+                                hashMapisi.put("idfoto",p0.toString())
+                                database.child("data${ambil.getStringExtra("username")}").child("activity")
+                                        .child("post")
+                                        .push()
+                                        .setValue(hashMapisi)
+                                        .addOnSuccessListener {
+                                            if(ambil.getBooleanExtra("profile",false)){
+                                                val pindah = Intent(this@Sharedpost,profile::class.java)
+                                                pindah.putExtra("username",ambil.getStringExtra("username"))
+                                                startActivity(pindah)
+                                                finish()
+                                            }
+                                            else{
+                                                val pindah = Intent(this@Sharedpost,Home::class.java)
+                                                pindah.putExtra("username",ambil.getStringExtra("username"))
+                                                startActivity(pindah)
+                                                finish()
+                                            }
+                                        }
+                            }
+                        })
                     }
                 }
-
             })
         }
     }

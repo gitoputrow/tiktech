@@ -90,7 +90,7 @@ class contribute : AppCompatActivity() {
     data class list_class(var username: String, var foto: String, var text: String, var date: String)
     val listt = mutableListOf<list_class>()
     private fun recyclerViewInflater(ambil : Intent) {
-        database.child("data${ambil.getStringExtra("usernamepost")}").addListenerForSingleValueEvent(object : ValueEventListener{
+        database.child("data${ambil.getStringExtra("usernamepost")}").addValueEventListener(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }

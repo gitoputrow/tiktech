@@ -40,6 +40,7 @@ class profile : AppCompatActivity() , clicklistener{
     var x = ""
     val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
     val database: DatabaseReference = FirebaseDatabase.getInstance().getReference()
+    var pindah_stat = true
     private var layoutManager: RecyclerView.LayoutManager? = null
     private lateinit var adapter: feedadapter
     private val list = ArrayList<feeditem>()
@@ -56,13 +57,6 @@ class profile : AppCompatActivity() , clicklistener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 findViewById<TextView>(R.id.namaprofile).setText("${snapshot.child("name").value.toString()}")
                 if (snapshot.child("profile").value.toString().equals("true")){
-                    storage.child("profile${ambil.getStringExtra("username")}").downloadUrl.addOnSuccessListener(object :
-                            OnSuccessListener<Uri>{
-                        override fun onSuccess(p0: Uri?) {
-                            database.child("data${ambil.getStringExtra("username")}").child("fp").setValue(p0.toString())
-                        }
-
-                    })
                     findViewById<CircleImageView>(R.id.fotoprofile).load(snapshot.child("fp").value.toString())
                 }
                 if (snapshot.child("activity").hasChild("post")){
@@ -99,31 +93,51 @@ class profile : AppCompatActivity() , clicklistener{
         })
 
         findViewById<ImageView>(R.id.imagehome_profile).setOnClickListener {
-            val pindah = Intent(this,Home::class.java)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
-            startActivity(pindah)
-            overridePendingTransition(0,0)
-            finish()
+            if (pindah_stat == true) {
+                val pindah = Intent(this, Home::class.java)
+                pindah.putExtra("username", ambil.getStringExtra("username"))
+                startActivity(pindah)
+                overridePendingTransition(0, 0)
+                finish()
+            }
+            else{
+                Toast.makeText(baseContext,"Plese wait, Your photo profile still uploading",Toast.LENGTH_SHORT).show()
+            }
         }
         findViewById<ImageView>(R.id.imageupload_profile).setOnClickListener {
-            val pindah = Intent(this,Sharedpost::class.java)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
-            pindah.putExtra("profile",true)
-            startActivity(pindah)
-            overridePendingTransition(0,0)
-            finish()
+            if (pindah_stat == true) {
+                val pindah = Intent(this, Sharedpost::class.java)
+                pindah.putExtra("username", ambil.getStringExtra("username"))
+                pindah.putExtra("profile", true)
+                startActivity(pindah)
+                overridePendingTransition(0, 0)
+                finish()
+            }
+            else{
+                Toast.makeText(baseContext,"Plese wait, Your photo profile still uploading",Toast.LENGTH_SHORT).show()
+            }
         }
         findViewById<Button>(R.id.buttonep).setOnClickListener {
-            val pindah = Intent(this,Editprofile::class.java)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
-            startActivity(pindah)
-            finish()
+            if (pindah_stat == true) {
+                val pindah = Intent(this, Editprofile::class.java)
+                pindah.putExtra("username", ambil.getStringExtra("username"))
+                startActivity(pindah)
+                finish()
+            }
+            else{
+                Toast.makeText(baseContext,"Plese wait, Your photo profile still uploading",Toast.LENGTH_SHORT).show()
+            }
         }
         findViewById<ImageView>(R.id.settingprofile).setOnClickListener {
-            val pindah = Intent(this,setting_menu::class.java)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
-            startActivity(pindah)
-            finish()
+            if (pindah_stat == true) {
+                val pindah = Intent(this, setting_menu::class.java)
+                pindah.putExtra("username", ambil.getStringExtra("username"))
+                startActivity(pindah)
+                finish()
+            }
+            else{
+                Toast.makeText(baseContext,"Plese wait, Your photo profile still uploading",Toast.LENGTH_SHORT).show()
+            }
         }
         findViewById<CircleImageView>(R.id.fotoprofile).setOnClickListener {
             val array = arrayOf("Take Picture","Select Picture","cancel")
@@ -147,14 +161,19 @@ class profile : AppCompatActivity() , clicklistener{
         recyclerViewInflater()
 
         findViewById<SwipeRefreshLayout>(R.id.refresh_profile).setOnRefreshListener{
-            findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = true
-            finish()
-            overridePendingTransition(0,0)
-            val pindah = Intent(this,profile::class.java)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
-            startActivity(pindah)
-            overridePendingTransition(0,0)
-            findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = false
+            if (pindah_stat == true) {
+                findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = true
+                finish()
+                overridePendingTransition(0, 0)
+                val pindah = Intent(this, profile::class.java)
+                pindah.putExtra("username", ambil.getStringExtra("username"))
+                startActivity(pindah)
+                overridePendingTransition(0, 0)
+                findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = false
+            }
+            else{
+                Toast.makeText(baseContext,"Plese wait, Your photo profile still uploading",Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -163,6 +182,7 @@ class profile : AppCompatActivity() , clicklistener{
         if (requestCode == 0){
             if (data != null){
                 if (data.extras != null) {
+                    pindah_stat = false
                     val bitmap: Bitmap = data!!.extras!!.get("data") as Bitmap
                     findViewById<CircleImageView>(R.id.fotoprofile).setImageBitmap(bitmap)
                     val bitmap1 = (findViewById<CircleImageView>(R.id.fotoprofile).drawable as BitmapDrawable).bitmap
@@ -170,8 +190,17 @@ class profile : AppCompatActivity() , clicklistener{
                     bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                     val data = baos.toByteArray()
                     storage.child("profile${x}")
-                            .putBytes(data)
-                    database.child("data${x}").child("profile").setValue("true")
+                            .putBytes(data).addOnCompleteListener{
+                                if (it.isSuccessful){
+                                    storage.child("profile${x}").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
+                                        override fun onSuccess(p0: Uri?) {
+                                            database.child("data$x").child("fp").setValue(p0.toString())
+                                        }
+                                    })
+                                    pindah_stat = true
+                                    database.child("data${x}").child("profile").setValue("true")
+                                }
+                            }
                 }
             }
         }
@@ -210,16 +239,16 @@ class profile : AppCompatActivity() , clicklistener{
                                         var childnametext = snapshot.child(childname).child("text").value.toString()
                                         var foto_status = snapshot.child(childname).child("foto").value.toString()
                                         var date = snapshot.child(childname).child("date").value.toString()
-                                        if (foto_status.equals("true")){
-                                            storage.child("post$x")
-                                                    .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
-                                                        override fun onSuccess(p0: Uri?) {
-                                                            database.child("data$x").child("activity")
-                                                                    .child("post")
-                                                                    .child(childname).child("idfoto").setValue(p0.toString())
-                                                        }
-                                                    })
-                                        }
+//                                        if (foto_status.equals("true")){
+//                                            storage.child("post$x")
+//                                                    .child(childname).downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri> {
+//                                                        override fun onSuccess(p0: Uri?) {
+//                                                            database.child("data$x").child("activity")
+//                                                                    .child("post")
+//                                                                    .child(childname).child("idfoto").setValue(p0.toString())
+//                                                        }
+//                                                    })
+//                                        }
                                         var foto = snapshot.child(childname).child("idfoto").value.toString()
                                         if (childnametext.length > 20){
                                             text = "${childnametext.removeRange(20,childnametext.length)}...."
