@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -39,6 +40,8 @@ class contribute : AppCompatActivity() {
             pindah.putExtra("foto",ambil.getStringExtra("foto"))
             startActivity(pindah)
             finish()
+//            onBackPressed()
+//            finish()
         }
         findViewById<ImageView>(R.id.imageView7).setOnClickListener {
             if (findViewById<TextInputEditText>(R.id.comment_input).text.toString().isNotEmpty()){
@@ -69,7 +72,7 @@ class contribute : AppCompatActivity() {
                 })
             }
             else{
-                Toast.makeText(baseContext,"isi pesan",Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext,"fill the message",Toast.LENGTH_SHORT).show()
             }
         }
         findViewById<SwipeRefreshLayout>(R.id.refresh_constribute).setOnRefreshListener{
@@ -90,7 +93,7 @@ class contribute : AppCompatActivity() {
     data class list_class(var username: String, var foto: String, var text: String, var date: String)
     val listt = mutableListOf<list_class>()
     private fun recyclerViewInflater(ambil : Intent) {
-        database.child("data${ambil.getStringExtra("usernamepost")}").addValueEventListener(object : ValueEventListener{
+        database.child("data${ambil.getStringExtra("usernamepost")}").addListenerForSingleValueEvent(object : ValueEventListener{
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
@@ -108,7 +111,7 @@ class contribute : AppCompatActivity() {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 database.child("data${ambil.getStringExtra("usernamepost")}").child("activity").child("post")
                                         .child(ambil.getStringExtra("postid").toString()).child("contribute")
-                                        .child(username_cmid).child("fp")
+                                        .child(username_cmid).child("fpcomment")
                                         .setValue(snapshot.child("fp").value.toString())
                             }
 
@@ -122,7 +125,7 @@ class contribute : AppCompatActivity() {
                             var date = snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString())
                                     .child("contribute").child(username_cmid).child("comment").child(comment_idd).child("date").value.toString()
                             var foto = snapshot.child("activity").child("post").child(ambil.getStringExtra("postid").toString())
-                                    .child("contribute").child(username_cmid).child("fp").value.toString()
+                                    .child("contribute").child(username_cmid).child("fpcomment").value.toString()
                             listt.add(list_class(username_cmid,foto,text,date))
                         }
                     }

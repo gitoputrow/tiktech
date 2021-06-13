@@ -19,9 +19,12 @@ class feedadapter(private val item : List<feeditem>, var clicklistener : clickli
             view.findViewById<TextView>(R.id.feed_name).text = item.name
             view.findViewById<MaterialTextView>(R.id.feed_user).text = item.username
             view.findViewById<MaterialTextView>(R.id.feed_caption).text = item.content
-            itemView.setOnClickListener {
+            view.findViewById<TextView>(R.id.readmore).setOnClickListener {
                 action.onitemclick(item,adapterPosition)
             }
+//            view.findViewById<ImageView>(R.id.delete_feed).setOnClickListener {
+//                action.deleteitem(item,adapterPosition)
+//            }
         }
     }
 

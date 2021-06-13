@@ -1,16 +1,16 @@
 package com.example.tiktech
 
 import android.app.AlertDialog
-import android.content.ContentValues
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,23 +20,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import coil.load
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Registry
-import com.bumptech.glide.annotation.GlideModule
-import com.bumptech.glide.module.AppGlideModule
-import com.firebase.ui.storage.images.FirebaseImageLoader
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.*
 import de.hdodenhof.circleimageview.CircleImageView
 import java.io.ByteArrayOutputStream
-import java.io.InputStream
 
 
 class profile : AppCompatActivity() , clicklistener{
+    data class list_class(var foto: String, var username: String,var childname: String , var name: String, var text: String, var date: String)
+    val listt = mutableListOf<list_class>()
     var x = ""
     val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
     val database: DatabaseReference = FirebaseDatabase.getInstance().getReference()
@@ -172,9 +166,12 @@ class profile : AppCompatActivity() , clicklistener{
                 findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = false
             }
             else{
+                findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = true
                 Toast.makeText(baseContext,"Plese wait, Your photo profile still uploading",Toast.LENGTH_SHORT).show()
+                findViewById<SwipeRefreshLayout>(R.id.refresh_profile).isRefreshing = false
             }
         }
+        Log.d(TAG, listt.isNotEmpty().toString())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -194,11 +191,11 @@ class profile : AppCompatActivity() , clicklistener{
                                 if (it.isSuccessful){
                                     storage.child("profile${x}").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
                                         override fun onSuccess(p0: Uri?) {
+                                            pindah_stat = true
+                                            database.child("data${x}").child("profile").setValue("true")
                                             database.child("data$x").child("fp").setValue(p0.toString())
                                         }
                                     })
-                                    pindah_stat = true
-                                    database.child("data${x}").child("profile").setValue("true")
                                 }
                             }
                 }
@@ -206,19 +203,27 @@ class profile : AppCompatActivity() , clicklistener{
         }
         else {
             if (data != null) {
+                pindah_stat = false
                 findViewById<CircleImageView>(R.id.fotoprofile).setImageURI(data?.data)
                 val bitmap1 = (findViewById<CircleImageView>(R.id.fotoprofile).drawable as BitmapDrawable).bitmap
                 val baos = ByteArrayOutputStream()
                 bitmap1.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                 val data = baos.toByteArray()
                 storage.child("profile${x}")
-                        .putBytes(data)
-                database.child("data${x}").child("profile").setValue("true")
+                        .putBytes(data).addOnCompleteListener{
+                            if (it.isSuccessful){
+                                storage.child("profile${x}").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
+                                    override fun onSuccess(p0: Uri?) {
+                                        pindah_stat = true
+                                        database.child("data${x}").child("profile").setValue("true")
+                                        database.child("data$x").child("fp").setValue(p0.toString())
+                                    }
+                                })
+                            }
+                        }
             }
         }
     }
-    data class list_class(var foto: String, var username: String,var childname: String , var name: String, var text: String, var date: String)
-    val listt = mutableListOf<list_class>()
     private fun recyclerViewInflater() {
 //        Log.d(ContentValues.TAG,x.toString());
         database.child("data${x}").addListenerForSingleValueEvent(object : ValueEventListener{
@@ -227,6 +232,7 @@ class profile : AppCompatActivity() , clicklistener{
             }
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.child("activity").hasChild("post")){
+                    findViewById<ImageView>(R.id.imageView6).visibility = View.INVISIBLE
                     var name = snapshot.child("name").value.toString()
 //                    Log.d(ContentValues.TAG,name.toString());
                     database.child("data${x}").child("activity").child("post").orderByChild("date")
@@ -264,8 +270,11 @@ class profile : AppCompatActivity() , clicklistener{
                                     }
                                 }
                             })
-                    }
                 }
+                else{
+                    findViewById<ImageView>(R.id.imageView6).visibility = View.VISIBLE
+                }
+            }
         })
     }
 
@@ -283,6 +292,7 @@ class profile : AppCompatActivity() , clicklistener{
         pindah.putExtra("username",x)
         pindah.putExtra("postid",item.postid)
         pindah.putExtra("foto", item.photo)
+        pindah.putExtra("profile", true)
         startActivity(pindah)
         overridePendingTransition(0,0)
         finish()

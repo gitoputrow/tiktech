@@ -2,14 +2,13 @@ package com.example.tiktech
 
 import android.content.ContentValues
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -137,6 +136,7 @@ class Home : AppCompatActivity() , clicklistener{
         pindah.putExtra("username",username)
         pindah.putExtra("postid",item.postid)
         pindah.putExtra("foto", item.photo)
+        pindah.putExtra("home",true)
         startActivity(pindah)
         overridePendingTransition(0,0)
         finish()

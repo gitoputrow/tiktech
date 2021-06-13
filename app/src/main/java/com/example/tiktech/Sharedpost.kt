@@ -71,6 +71,7 @@ class Sharedpost : AppCompatActivity() {
                 startActivity(pindah)
                 finish()
             }
+//            onBackPressed()
         }
         findViewById<ImageView>(R.id.camera_sp).setOnClickListener{
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)

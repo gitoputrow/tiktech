@@ -55,8 +55,6 @@ class setting_menu : AppCompatActivity() {
                 }
 
             })
-            database.child("data${ambil.getStringExtra("username")}").removeValue()
-            storage.child("profile${ambil.getStringExtra("username")}").delete()
             database.addListenerForSingleValueEvent(object : ValueEventListener{
                 override fun onCancelled(error: DatabaseError) {
                     TODO("Not yet implemented")
@@ -103,6 +101,8 @@ class setting_menu : AppCompatActivity() {
                 }
 
             })
+            database.child("data${ambil.getStringExtra("username")}").removeValue()
+            storage.child("profile${ambil.getStringExtra("username")}").delete()
             val pindah = Intent(this,Login_activty::class.java)
             startActivity(pindah)
             finish()

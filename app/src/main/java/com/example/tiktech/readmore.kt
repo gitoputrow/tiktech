@@ -1,16 +1,19 @@
 package com.example.tiktech
 
 import android.content.ContentValues
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import coil.load
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnSuccessListener
@@ -38,12 +41,7 @@ class readmore : AppCompatActivity() {
                 findViewById<TextView>(R.id.usernameprofile_readmore).setText(snapshot.child("user").value.toString())
                 findViewById<TextView>(R.id.namaprofile_readmore).setText(snapshot.child("name").value.toString())
                 if (snapshot.child("profile").value.toString().equals("true")) {
-                    storage.child("profile${ambil.getStringExtra("usernamepost")}").downloadUrl.addOnSuccessListener(object :
-                            OnSuccessListener<Uri> {
-                        override fun onSuccess(p0: Uri?) {
-                            Glide.with(this@readmore).load(p0).into(findViewById(R.id.fotoprofile_readmore))
-                        }
-                    })
+                    Glide.with(this@readmore).load(snapshot.child("fp").value.toString()).into(findViewById(R.id.fotoprofile_readmore))
                 }
             }
         })
@@ -138,6 +136,73 @@ class readmore : AppCompatActivity() {
             pindah.putExtra("usernamepost",ambil.getStringExtra("usernamepost"))
             pindah.putExtra("foto",ambil.getStringExtra("foto"))
             startActivity(pindah)
+            finish()
+        }
+        if (ambil.getStringExtra("username").toString().equals(ambil.getStringExtra("usernamepost").toString())){
+            findViewById<ImageView>(R.id.delete_but).visibility = View.VISIBLE
+        }
+        findViewById<ImageView>(R.id.delete_but).setOnClickListener {
+            findViewById<ConstraintLayout>(R.id.popup_layout).visibility = View.VISIBLE
+            findViewById<Button>(R.id.no).setOnClickListener {
+                findViewById<ConstraintLayout>(R.id.popup_layout).visibility = View.INVISIBLE
+            }
+            findViewById<Button>(R.id.yes).setOnClickListener {
+                findViewById<LinearLayout>(R.id.option).visibility = View.INVISIBLE
+                findViewById<ProgressBar>(R.id.progressBar_yes).visibility = View.VISIBLE
+                database.child("data${ambil.getStringExtra("username")}").child("activity")
+                        .child("post").child(ambil.getStringExtra("postid").toString())
+                        .child("foto").addListenerForSingleValueEvent(object : ValueEventListener{
+                            override fun onCancelled(error: DatabaseError) {
+                                TODO("Not yet implemented")
+                            }
+
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                if (snapshot.child("foto").value.toString().equals("true")){
+                                    storage.child("post${ambil.getStringExtra("username")}/${ambil.getStringExtra("postid")}")
+                                            .delete().addOnCompleteListener {
+                                                if (it.isSuccessful) {
+                                                    database.child("post${ambil.getStringExtra("username")}").child("activity")
+                                                            .child("post").child(ambil.getStringExtra("postid").toString()).removeValue().addOnSuccessListener {
+                                                                if (ambil.getBooleanExtra("profile", false)) {
+                                                                    val pindah = Intent(this@readmore, profile::class.java)
+                                                                    pindah.putExtra("username", ambil.getStringExtra("username"))
+                                                                    startActivity(pindah)
+                                                                    overridePendingTransition(0, 0)
+                                                                    finish()
+                                                                } else {
+                                                                    val pindah = Intent(this@readmore, Home::class.java)
+                                                                    pindah.putExtra("username", ambil.getStringExtra("username"))
+                                                                    startActivity(pindah)
+                                                                    overridePendingTransition(0, 0)
+                                                                    finish()
+                                                                }
+                                                            }
+                                                }
+                                            }
+                                }
+                                else{
+                                    database.child("data${ambil.getStringExtra("username")}").child("activity")
+                                            .child("post").child(ambil.getStringExtra("postid").toString()).removeValue().addOnSuccessListener {
+                                                if(ambil.getBooleanExtra("profile",false)){
+                                                    val pindah = Intent(this@readmore,profile::class.java)
+                                                    pindah.putExtra("username",ambil.getStringExtra("username"))
+                                                    startActivity(pindah)
+                                                    overridePendingTransition(0,0)
+                                                    finish()
+                                                }
+                                                else{
+                                                    val pindah = Intent(this@readmore,Home::class.java)
+                                                    pindah.putExtra("username",ambil.getStringExtra("username"))
+                                                    startActivity(pindah)
+                                                    overridePendingTransition(0,0)
+                                                    finish()
+                                                }
+                                            }
+                                }
+                            }
+
+                        })
+            }
         }
         findViewById<ImageView>(R.id.imagenotif_readmore).setOnClickListener {
             val pindah = Intent(this,notification::class.java)

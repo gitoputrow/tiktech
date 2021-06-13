@@ -51,13 +51,14 @@ class Login_activty : AppCompatActivity() {
                             val home = Intent(this@Login_activty,Home::class.java)
                             home.putExtra("username",findViewById<EditText>(R.id.username).text.toString())
                             startActivity(home)
+                            finish()
                         }
                         else{
-                            Toast.makeText(baseContext,"Password Salah",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(baseContext,"Wrong Password",Toast.LENGTH_SHORT).show()
                         }
                     }
                     else{
-                        Toast.makeText(baseContext,"Username tidak ditemukan",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(baseContext,"Username doesn't found",Toast.LENGTH_SHORT).show()
                     }
                 }
 

@@ -15,8 +15,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/fp_constribute"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/profile3"
@@ -31,7 +31,7 @@
             android:id="@+id/username_constribute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="10dp"
             android:fontFamily="@font/montserrat_regular"
             android:text="Username"
             android:textColor="@color/black"

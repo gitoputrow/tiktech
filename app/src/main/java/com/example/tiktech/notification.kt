@@ -47,6 +47,7 @@ class notification : AppCompatActivity(), clicklistener_notif {
             pindah.putExtra("username",ambil.getStringExtra("username"))
             startActivity(pindah)
             finish()
+//            onBackPressed()
         }
         findViewById<ImageView>(R.id.imagehome_notif).setOnClickListener {
             val pindah = Intent(this,Home::class.java)
@@ -54,6 +55,7 @@ class notification : AppCompatActivity(), clicklistener_notif {
             startActivity(pindah)
             overridePendingTransition(0,0)
             finish()
+//            onBackPressed()
         }
         recyclerViewInflater(ambil)
     }
@@ -135,11 +137,15 @@ class notification : AppCompatActivity(), clicklistener_notif {
     }
 
     override fun onnotifclick(item: notifitem, position: Int) {
-        database.child("data${user}").child("activity").child("post")
-                .child(item.postid.toString()).child("likes").child(item.username.toString()).child("value").setValue("false")
-        database.child("data${user}").child("activity").child("post").child(item.postid.toString())
-                .child("contribute").child(item.username.toString()).child("comment")
-                .child(item.commentid.toString()).child("value").setValue("false")
+        if (item.commentid.toString().equals("")){
+            database.child("data${user}").child("activity").child("post")
+                    .child(item.postid.toString()).child("likes").child(item.username.toString()).child("value").setValue("false")
+        }
+        else{
+            database.child("data${user}").child("activity").child("post").child(item.postid.toString())
+                    .child("contribute").child(item.username.toString()).child("comment")
+                    .child(item.commentid.toString()).child("value").setValue("false")
+        }
         val pindah = Intent(this,readmore::class.java)
         pindah.putExtra("username",user)
         pindah.putExtra("usernamepost",user)

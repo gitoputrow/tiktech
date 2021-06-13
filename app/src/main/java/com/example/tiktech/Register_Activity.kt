@@ -45,11 +45,11 @@ class Register_Activity : AppCompatActivity() {
                     (findViewById<EditText>(R.id.nameinput).text.isEmpty()) or
                     (findViewById<EditText>(R.id.usernameinput).text.isEmpty()) or
                     (findViewById<EditText>(R.id.emailinput).text.isEmpty())){
-                Toast.makeText(baseContext,"Lengkapi Data",Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext,"Fill all the data",Toast.LENGTH_SHORT).show()
             }
             else {
                 if (findViewById<EditText>(R.id.usernameinput).text.toString().indexOf(" ") >=0 ){
-                    Toast.makeText(baseContext,"Username Tidak Boleh Mengandung Spasi",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Username can't contain spaces",Toast.LENGTH_SHORT).show()
                 }
                 else{
                     if (findViewById<EditText>(R.id.confirmpasswordinput).text.toString().equals(findViewById<EditText>(R.id.passwordinput).text.toString())) {
@@ -60,7 +60,7 @@ class Register_Activity : AppCompatActivity() {
 
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 if (snapshot.hasChild("data${findViewById<EditText>(R.id.usernameinput).text}")) {
-                                    Toast.makeText(baseContext, "Username Sudah Terpakai", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(baseContext, "Username Already Taken", Toast.LENGTH_SHORT).show()
                                 } else {
                                     masuk(database,storage,findViewById(R.id.masuk),findViewById(R.id.progressBar_regist))
 
@@ -70,7 +70,7 @@ class Register_Activity : AppCompatActivity() {
                         })
                     }
                     else {
-                        Toast.makeText(baseContext, "Password tidak sesuai", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(baseContext, "Password doesn't match", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -102,15 +102,15 @@ class Register_Activity : AppCompatActivity() {
         loading.visibility = View.VISIBLE
         storage.child("profile2.png").downloadUrl.addOnSuccessListener(object : OnSuccessListener<Uri>{
             override fun onSuccess(p0: Uri?) {
-                activty(database)
                 database.child("data${findViewById<EditText>(R.id.usernameinput).text}")
                         .setValue(Regist(findViewById<EditText>(R.id.usernameinput).text.toString(),
                                 findViewById<EditText>(R.id.passwordinput).text.toString(),
                                 findViewById<EditText>(R.id.nameinput).text.toString(),
                                 findViewById<EditText>(R.id.emailinput).text.toString(),"false",p0.toString()))
                         .addOnSuccessListener {
+                            activty(database)
                             loading.visibility = View.INVISIBLE
-                            Toast.makeText(baseContext,"Berhasil",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(baseContext,"Successful",Toast.LENGTH_SHORT).show()
                             val pindah = Intent(this@Register_Activity,Login_activty::class.java)
                             startActivity(pindah)
                             finish()
