@@ -22,7 +22,8 @@
         <activity android:name=".Home" />
         <activity android:name=".Register_Activity" />
         <activity android:name=".Login_activty" />
-        <activity android:name=".homescreen_Activity">
+        <activity android:name=".homescreen_Activity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

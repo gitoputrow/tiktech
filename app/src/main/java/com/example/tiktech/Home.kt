@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -29,44 +30,71 @@ class Home : AppCompatActivity() , clicklistener{
     val database: DatabaseReference = FirebaseDatabase.getInstance().getReference()
     val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
     var username = ""
+    val firebaseauth = FirebaseAuth.getInstance()
+    val firebaseAuthuserLogin = firebaseauth.currentUser
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         val ambil = intent
         username = ambil.getStringExtra("username").toString()
-        findViewById<ImageView>(R.id.imageprofile).setOnClickListener {
-            val pindah = Intent(this,profile::class.java)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
+        if (firebaseAuthuserLogin != null) {
+            val email = firebaseAuthuserLogin.email
+            database.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (childmain in snapshot.children) {
+                        var childdata = childmain.key.toString()
+                        var emailUser = snapshot.child(childdata).child("email").value.toString()
+                        var username = snapshot.child(childdata).child("user").value.toString()
+                        if (email.toString().equals(emailUser)){
+                            findViewById<ImageView>(R.id.imageprofile).setOnClickListener {
+                                val pindah = Intent(this@Home,profile::class.java)
+                                pindah.putExtra("username",username)
+                                startActivity(pindah)
+                                overridePendingTransition(0,0)
+                                finish()
+                            }
+                            findViewById<ImageView>(R.id.imageupload).setOnClickListener {
+                                val pindah = Intent(this@Home,Sharedpost::class.java)
+                                pindah.putExtra("home",true)
+                                pindah.putExtra("username",username)
+                                startActivity(pindah)
+                                overridePendingTransition(0,0)
+                                finish()
+                            }
+                            findViewById<ImageView>(R.id.imagenotif).setOnClickListener {
+                                val pindah = Intent(this@Home,notification::class.java)
+                                pindah.putExtra("username",username)
+                                startActivity(pindah)
+                                overridePendingTransition(0,0)
+                                finish()
+                            }
+                            findViewById<SwipeRefreshLayout>(R.id.refresh).setOnRefreshListener {
+                                findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = true
+                                finish()
+                                overridePendingTransition(0,0)
+                                val pindah = Intent(this@Home,Home::class.java)
+                                pindah.putExtra("username",username)
+                                startActivity(pindah)
+                                overridePendingTransition(0,0)
+                                findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = false
+                            }
+                            recyclerViewInflater()
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+        }
+        else{
+            val pindah = Intent(this,Login_activty::class.java)
+            finish()
             startActivity(pindah)
             overridePendingTransition(0,0)
-            finish()
         }
-        findViewById<ImageView>(R.id.imageupload).setOnClickListener {
-            val pindah = Intent(this,Sharedpost::class.java)
-            pindah.putExtra("home",true)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
-            startActivity(pindah)
-            overridePendingTransition(0,0)
-            finish()
-        }
-        findViewById<ImageView>(R.id.imagenotif).setOnClickListener {
-            val pindah = Intent(this,notification::class.java)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
-            startActivity(pindah)
-            overridePendingTransition(0,0)
-            finish()
-        }
-        findViewById<SwipeRefreshLayout>(R.id.refresh).setOnRefreshListener {
-            findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = true
-            finish()
-            overridePendingTransition(0,0)
-            val pindah = Intent(this,Home::class.java)
-            pindah.putExtra("username",ambil.getStringExtra("username"))
-            startActivity(pindah)
-            overridePendingTransition(0,0)
-            findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = false
-        }
-        recyclerViewInflater()
+
     }
     data class list_class(var foto: String, var username: String,var childname: String , var name: String, var text: String, var date: String)
     val listt = mutableListOf<list_class>()

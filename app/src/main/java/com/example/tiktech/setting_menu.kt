@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -21,6 +22,7 @@ class setting_menu : AppCompatActivity() {
         val ambil = intent
         val database : DatabaseReference = FirebaseDatabase.getInstance().getReference()
         val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
+        val firebaseAuth = FirebaseAuth.getInstance()
         animation(R.id.header_set)
         animation(R.id.judul_set)
         animation(R.id.backarrow_set)
@@ -32,6 +34,7 @@ class setting_menu : AppCompatActivity() {
             finish()
         }
         findViewById<Button>(R.id.button_logout).setOnClickListener {
+            firebaseAuth.signOut()
             val pindah = Intent(this,Login_activty::class.java)
             startActivity(pindah)
             finish()

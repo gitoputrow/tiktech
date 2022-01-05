@@ -99,7 +99,7 @@ class notification : AppCompatActivity(), clicklistener_notif {
                     if (snapshot.child(childname).hasChild("contribute")){
                         for (userr in snapshot.child(childname).child("contribute").children){
                             var user_name = userr.key.toString()
-                            var fp = snapshot.child(childname).child("contribute").child(user_name).child("fp").value.toString()
+                            var fp = snapshot.child(childname).child("contribute").child(user_name).child("fpcomment").value.toString()
                             for (comment in  snapshot.child(childname).child("contribute").child(user_name).child("comment").children){
                                 var comment_id = comment.key.toString()
                                 if (snapshot.child(childname).child("contribute").child(user_name).child("comment").child(comment_id).child("value").value.toString().equals("true")){

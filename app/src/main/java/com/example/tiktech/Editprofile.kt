@@ -31,11 +31,11 @@ class Editprofile : AppCompatActivity() {
         }
         findViewById<Button>(R.id.button_save).setOnClickListener {
             if ((findViewById<EditText>(R.id.name_cp).text.isEmpty()) or (findViewById<EditText>(R.id.name_cp).text.equals(" "))){
-                Toast.makeText(baseContext,"Harap isi Name",Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext,"Fill the name",Toast.LENGTH_SHORT).show()
             }
             else{
                 if (findViewById<EditText>(R.id.cpass_cp).text.isEmpty()){
-                    Toast.makeText(baseContext,"Harap isi Password",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext,"Fill the password",Toast.LENGTH_SHORT).show()
                 }
                 else{
                     database.child("data${ambil.getStringExtra("username")}").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -65,16 +65,16 @@ class Editprofile : AppCompatActivity() {
                                                     findViewById<EditText>(R.id.npass_cp).setText("")
                                                     findViewById<EditText>(R.id.cpass_cp).setText("")
                                                     findViewById<EditText>(R.id.name_cp).setText("")
-                                                    Toast.makeText(baseContext,"Berhasil",Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(baseContext,"Success",Toast.LENGTH_SHORT).show()
                                                 }
                                     }
                                     else{
-                                        Toast.makeText(baseContext,"Password tidak sesuai",Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(baseContext,"Password doesn't match",Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
                             else{
-                                Toast.makeText(baseContext,"Password salah",Toast.LENGTH_SHORT).show()
+                                Toast.makeText(baseContext,"wrong password",Toast.LENGTH_SHORT).show()
                             }
                         }
 

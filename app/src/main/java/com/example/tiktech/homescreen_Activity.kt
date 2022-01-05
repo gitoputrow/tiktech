@@ -14,7 +14,7 @@ class homescreen_Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.homescreen)
         findViewById<Button>(R.id.loginyuk).setOnClickListener{
-            val login = Intent(this,Login_activty::class.java)
+            val login = Intent(this,Home::class.java)
             startActivity(login)
         }
         findViewById<TextView>(R.id.menuregist).setOnClickListener {

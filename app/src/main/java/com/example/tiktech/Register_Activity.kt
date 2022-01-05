@@ -11,6 +11,7 @@ import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.widget.*
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
@@ -21,6 +22,7 @@ class Register_Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val database = FirebaseDatabase.getInstance().getReference()
         val storage = Firebase.storage("gs://tiktech-cb01d.appspot.com").reference
+        val firebaseauth = FirebaseAuth.getInstance()
         setContentView(R.layout.activity_register_)
         hideshow(findViewById(R.id.hidepass),findViewById(R.id.showpass),findViewById(R.id.passwordinput))
         hideshow(findViewById(R.id.hideconpass),findViewById(R.id.showconpass),findViewById(R.id.confirmpasswordinput))
@@ -52,25 +54,50 @@ class Register_Activity : AppCompatActivity() {
                     Toast.makeText(baseContext, "Username can't contain spaces",Toast.LENGTH_SHORT).show()
                 }
                 else{
-                    if (findViewById<EditText>(R.id.confirmpasswordinput).text.toString().equals(findViewById<EditText>(R.id.passwordinput).text.toString())) {
-                        database.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onCancelled(error: DatabaseError) {
-                                TODO("Not yet implemented")
-                            }
-
-                            override fun onDataChange(snapshot: DataSnapshot) {
-                                if (snapshot.hasChild("data${findViewById<EditText>(R.id.usernameinput).text}")) {
-                                    Toast.makeText(baseContext, "Username Already Taken", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    masuk(database,storage,findViewById(R.id.masuk),findViewById(R.id.progressBar_regist))
-
-                                }
-                            }
-
-                        })
+                    if (findViewById<EditText>(R.id.passwordinput).text.toString().length < 6 ){
+                        Toast.makeText(baseContext, "Password must be at least 6 character",Toast.LENGTH_SHORT).show()
                     }
                     else {
-                        Toast.makeText(baseContext, "Password doesn't match", Toast.LENGTH_SHORT).show()
+                        if (findViewById<EditText>(R.id.confirmpasswordinput).text.toString()
+                                .equals(findViewById<EditText>(R.id.passwordinput).text.toString())
+                        ) {
+                            var email = findViewById<EditText>(R.id.emailinput).text.toString()
+                            var pass = findViewById<EditText>(R.id.passwordinput).text.toString()
+                            firebaseauth.createUserWithEmailAndPassword(email,pass)
+                                .addOnSuccessListener {
+                                    database.addListenerForSingleValueEvent(object :
+                                        ValueEventListener {
+                                        override fun onCancelled(error: DatabaseError) {
+                                            TODO("Not yet implemented")
+                                        }
+
+                                        override fun onDataChange(snapshot: DataSnapshot) {
+                                            if (snapshot.hasChild("data${findViewById<EditText>(R.id.usernameinput).text}")) {
+                                                Toast.makeText(
+                                                    baseContext,
+                                                    "Username Already Taken",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            } else {
+                                                masuk(
+                                                    database,
+                                                    storage,
+                                                    findViewById(R.id.masuk),
+                                                    findViewById(R.id.progressBar_regist)
+                                                )
+
+                                            }
+                                        }
+
+                                    })
+                                }
+                        } else {
+                            Toast.makeText(
+                                baseContext,
+                                "Password doesn't match",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }

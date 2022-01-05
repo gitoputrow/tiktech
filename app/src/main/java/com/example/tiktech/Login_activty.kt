@@ -13,6 +13,7 @@ import android.text.method.TransformationMethod
 import android.util.Log
 import android.view.View
 import android.widget.*
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 class Login_activty : AppCompatActivity() {
@@ -20,6 +21,8 @@ class Login_activty : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         val database :DatabaseReference = FirebaseDatabase.getInstance().getReference()
+        val firebaseauth = FirebaseAuth.getInstance()
+        val firebaseAuthuserLogin = firebaseauth.currentUser
         animation()
         findViewById<TextView>(R.id.menuregist2).setOnClickListener {
             val regist = Intent(this,Register_Activity::class.java)
@@ -45,13 +48,22 @@ class Login_activty : AppCompatActivity() {
                     if(snapshot.hasChild("data${findViewById<EditText>(R.id.username).text}")){
                         val pass = snapshot.child("data${findViewById<EditText>(R.id.username).text}").child("pass").value.toString()
                         val username = snapshot.child("data${findViewById<EditText>(R.id.username).text}").child("user").value.toString()
+                        val email = snapshot.child("data${findViewById<EditText>(R.id.username).text}").child("email").value.toString()
                         var cek = Login(username,pass,findViewById<EditText>(R.id.username).text.toString(),findViewById<EditText>(R.id.password).text.toString()).getStatus()
 //                        Log.d(ContentValues.TAG,cek.toString());
                         if( cek == true){
-                            val home = Intent(this@Login_activty,Home::class.java)
-                            home.putExtra("username",findViewById<EditText>(R.id.username).text.toString())
-                            startActivity(home)
-                            finish()
+                            firebaseauth.signInWithEmailAndPassword(email,pass)
+                                .addOnSuccessListener {
+                                    val firebaseUser = firebaseauth.currentUser
+                                    val email = firebaseUser!!.email
+                                    val home = Intent(this@Login_activty, Home::class.java)
+                                    home.putExtra(
+                                        "username",
+                                        findViewById<EditText>(R.id.username).text.toString()
+                                    )
+                                    startActivity(home)
+                                    finish()
+                                }
                         }
                         else{
                             Toast.makeText(baseContext,"Wrong Password",Toast.LENGTH_SHORT).show()
